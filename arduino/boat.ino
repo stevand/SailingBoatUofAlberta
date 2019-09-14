@@ -49,7 +49,7 @@ void setRudder(int angle){
 }
 
 void setSail(int angle){
-	Serial.print("Setting angle of rudder to ");
+	Serial.print("Setting angle of sail to ");
 	Serial.print(angle);
 	Serial.print(" degrees.\n");
 	sail.write(angle);
@@ -64,9 +64,10 @@ sxxx: set sail angle to xxx degrees
 */
 void handleInput(String input){
 	switch (input.charAt(0))
+	int angle;
 	{
 	case 'r':
-		int angle = parseInt(input, 1, 4); 
+		angle = parseInt(input, 1, 4); 
 		setRudder(angle);
 		break;
 	case 's':
