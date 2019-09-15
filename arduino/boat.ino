@@ -16,7 +16,6 @@ void setup()
 	digitalWrite(LED_BUILTIN, LOW);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
-	rudder.write(30);
 }
 
 void loop()
@@ -46,17 +45,13 @@ int parseInt(String str, int start, int stop)
 
 void setRudder(int angle)
 {
-	Serial.print("Setting angle of rudder to ");
-	Serial.print(angle);
-	Serial.print(" degrees.\n");
+	Serial.println(angle);
 	rudder.write(angle);
 }
 
 void setSail(int angle)
 {
-	Serial.print("Setting angle of sail to ");
-	Serial.print(angle);
-	Serial.print(" degrees.\n");
+	Serial.println(angle);
 	sail.write(angle);
 }
 
