@@ -1,16 +1,17 @@
 import serial
 
-class BoatDriver:
+class BoatDriver():
     def __init__(self, port):
         print('opening port', port)
         self._ser = serial.Serial(port, 9600)
 
     def __del__(self):
-        print('closing port', port)
         self._ser.close()
 
-    def absolute_wind_direction(self):
-        return float(self._send('d'))
+    def wind_direction(self):
+        resp = self._send('d')
+        print(resp)
+        return float(resp)
 
     def heading(self):
         return float(self._send('h'))
@@ -33,6 +34,3 @@ class BoatDriver:
         self._ser.write(cmd.encode('utf-8'))
         return self._ser.readline().decode('utf-8').strip()
 
-if __name__ == 'main':
-    port = 'COM3' #replace with '/dev/ttyUSB0' on linux
-    driver = BoatDriver(port)  

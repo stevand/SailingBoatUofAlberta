@@ -1,8 +1,9 @@
-#include <Servo.h>;
+#include <Servo.h>
 
 //take care to properly connect components
 const int RUDDER_PIN = 3;
 const int SAIL_PIN = 4;
+const int WIND_DIRECTION_PIN = A0;
 
 Servo rudder;
 Servo sail;
@@ -12,10 +13,10 @@ void setup()
 	Serial.begin(9600);
 	while (!Serial)
 		;
-	pinMode(LED_BUILTIN, OUTPUT);
-	digitalWrite(LED_BUILTIN, LOW);
+	pinMode(WIND_DIRECTION_PIN, INPUT);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
+	sail.write(90);
 }
 
 void loop()
@@ -74,7 +75,9 @@ void sendWindspeed()
 
 void sendWindDirection()
 {
-	Serial.println(0.0);
+	//input comes in [0, 706], mapping it to [0, 360]
+	int direction = map(analogRead(WIND_DIRECTION_PIN), 0, 706, 0, 360); 
+	Serial.println(direction);
 }
 
 /*
