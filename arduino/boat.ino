@@ -56,11 +56,6 @@ void setSail(int angle)
 	sail.write(angle);
 }
 
-void sendHeading()
-{
-	Serial.println(0.0);
-}
-
 void sendPosition()
 {
 	Serial.print(0.0);
