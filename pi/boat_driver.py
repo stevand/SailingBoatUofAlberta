@@ -1,5 +1,5 @@
 import serial
-from imu.IMU import IMU
+from .imu.IMU import IMU
 
 class BoatDriver():
     def __init__(self, port):
@@ -8,14 +8,14 @@ class BoatDriver():
 
     def __del__(self):
         self._ser.close()
+        del self._imu
 
     def wind_direction(self):
         resp = self._send('d')
-        print(resp)
         return float(resp)
 
     def heading(self):
-        return imu.heading()
+        return self._imu.heading()
 
     def position(self):
         return tuple(float(coord) for coord in self._send('p').split(','))
@@ -30,6 +30,6 @@ class BoatDriver():
 
     #sends message to arduino
     def  _send(self, cmd):
-        self._ser.write(cmd.encode('utf-8'))
+        self._ser.write((cmd+'\n').encode('utf-8'))
         return self._ser.readline().decode('utf-8').strip()
 

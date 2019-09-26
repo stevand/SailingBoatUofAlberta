@@ -10,6 +10,7 @@ Servo sail;
 
 void setup()
 {
+	Serial.setTimeout(50);
 	Serial.begin(9600);
 	while (!Serial)
 		;
@@ -29,7 +30,7 @@ String readInput()
 {
 	while (!Serial.available())
 		;
-	return Serial.readString();
+	return Serial.readStringUntil('\n');
 }
 
 //parses int in the range [start, stop)
@@ -80,7 +81,6 @@ first char determines the type of request
 
 rxxx: set rudder angle to xxx degrees
 sxxx: set sail angle to xxx degrees
-h: return heading
 p: return position
 w: return windspeed
 d: return wind direction
@@ -90,9 +90,6 @@ void handleInput(String input)
 	int angle;
 	switch (input.charAt(0))
 	{
-	case 'h':
-		sendHeading();
-		break;
 	case 'p':
 		sendPosition();
 		break;

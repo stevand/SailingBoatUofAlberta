@@ -1,12 +1,11 @@
-from XdaCallback import XdaCallback
-from builtins import *
+from .XdaCallback import XdaCallback
 import xsensdeviceapi as xda
 
 from time import perf_counter, sleep
 
 class IMU:
     def __init__(self):
-        control = xda.XsControl_construct()
+        self._control = xda.XsControl_construct()
 
         #finding the port the imu is connected to
         imu_port = None
@@ -18,13 +17,13 @@ class IMU:
             raise RuntimeError('IMU not found')
 
         #opening port
-        control.openPort(port.portName(), port.baudrate())
+        self._control.openPort(port.portName(), port.baudrate())
 
         #getting the device object from the id
-        device = control.device(imu_port.deviceId())
+        device = self._control.device(imu_port.deviceId())
 
         #setting up callback handler
-        self._callback = XdaCallback()
+        self._callback = XdaCallback(max_buffer_size=1)
         device.addCallbackHandler(self._callback)
 
         #configuring the device
@@ -45,9 +44,12 @@ class IMU:
                 orientation = self._callback.getNextPacket().orientationEuler()
                 return orientation
     
-    def heading():
+    def heading(self):
         yaw = self.orientation().yaw()
         return yaw + 180
+    
+    def __del__(self):
+        self._control.close()
 
 if __name__ == '__main__':
     imu = IMU()
