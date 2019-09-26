@@ -1,2 +1,8 @@
-arduino/.vscode/arduino.json
-arduino/.vscode/c_cpp_properties.json
+xsensdeviceapi-2019.2.0-cp36-none-win_amd64.whl
+.idea
+.vscode
+__pycache__
+*.log
+venv
+arduino/output
+pi/testing.py
