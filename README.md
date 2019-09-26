@@ -1,5 +1,5 @@
-# SailingBoatUofAlberta
-Design of ASV Boat at University of Alberta 
+# uAlberta Autonomous Sailing Vehicle
+This is the github for the ASV team at the University of Alberta. We are developing an autonomous sailboat in order to compete at the [World Robotic Sailing Championship](https://github.com/WRSC).
 
 ## Set up
 There are a few dependencies for this project, but they are not strictly necessary unless you wish to run the project on your device or you are working on the corresponding component.
