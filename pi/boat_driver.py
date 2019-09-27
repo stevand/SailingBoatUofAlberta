@@ -1,7 +1,8 @@
 import serial
 from .imu.IMU import IMU
+from .abstract_boat_driver import AbstractBoatDriver
 
-class BoatDriver():
+class BoatDriver(AbstractBoatDriver):
     def __init__(self, port):
         self._ser = serial.Serial(port, 9600)
         self._imu = IMU()
