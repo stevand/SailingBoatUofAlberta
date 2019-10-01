@@ -4,7 +4,7 @@ from .abstract_boat_driver import AbstractBoatDriver
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, port):
-        self._ser = serial.Serial(port, 9600)
+        self._ser = serial.Serial(port, 9600, timeout=0.5)
         self._imu = IMU()
 
     def __del__(self):
