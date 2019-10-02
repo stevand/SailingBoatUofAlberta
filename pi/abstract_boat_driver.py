@@ -15,7 +15,7 @@ class AbstractBoatDriver(abc.ABC):
 
     @abc.abstractmethod
     def sail(self, angle):
-        """Sets the angle of the sail to the given angle"""
+        """Tightens/loosens the sheets so that the sails may reach the given angle (0-90) away from the center"""
 
     @abc.abstractmethod
     def rudder(self, angle):
