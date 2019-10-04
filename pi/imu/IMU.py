@@ -8,33 +8,32 @@ class IMU:
         self._control = xda.XsControl_construct()
 
         #finding the port the imu is connected to
-        imu_port = None
         for port in xda.XsScanner_scanPorts():
             if port.deviceId().isMti() or port.deviceId().isMtig():
-                imu_port = port
+                self._port = port
                 break
         else:
             raise RuntimeError('IMU not found')
 
         #opening port
-        self._control.openPort(port.portName(), port.baudrate())
+        self._control.openPort(self._port.portName(), self._port.baudrate())
 
         #getting the device object from the id
-        device = self._control.device(imu_port.deviceId())
+        self._device = self._control.device(self._port.deviceId())
 
         #setting up callback handler
         self._callback = XdaCallback(max_buffer_size=1)
-        device.addCallbackHandler(self._callback)
+        self._device.addCallbackHandler(self._callback)
 
         #configuring the device
-        device.gotoConfig()
+        self._device.gotoConfig()
         configArray = xda.XsOutputConfigurationArray()
         configArray.push_back(xda.XsOutputConfiguration(xda.XDI_PacketCounter, 0))
         configArray.push_back(xda.XsOutputConfiguration(xda.XDI_SampleTimeFine, 0))
         configArray.push_back(xda.XsOutputConfiguration(xda.XDI_Quaternion, 0))
 
         #putting device into measurement mode
-        device.gotoMeasurement()
+        self._device.gotoMeasurement()
 
     def orientation(self):
         start = perf_counter()
@@ -48,7 +47,10 @@ class IMU:
         yaw = self.orientation().yaw()
         return yaw + 180
     
-    def __del__(self):
+    def close(self):
+        self._device.stopRecording()
+        self._device.removeCallbackHandler(self._callback)
+        self._control.closePort(self._port.portName())
         self._control.close()
 
 if __name__ == '__main__':
