@@ -3,6 +3,11 @@ import abc
 
 class AbstractBoatDriver(abc.ABC):
     @abc.abstractmethod
+    def close(self):
+        """Gracefully closes the driver and all serial connections. Call before exiting."""
+        pass
+
+    @abc.abstractmethod
     def get_wind_direction(self):
         """Returns the direction of the wind [0, 359], with 0 being North and 180 being South"""
         pass
