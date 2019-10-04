@@ -18,6 +18,7 @@ void setup()
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
 	sail.write(0);
+	rudder.write(45);
 }
 
 void loop()
