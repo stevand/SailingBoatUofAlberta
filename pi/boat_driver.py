@@ -20,7 +20,7 @@ class BoatDriver(AbstractBoatDriver):
     def get_position(self):
         return tuple(float(coord) for coord in self._send('p').split(','))
 
-    def get_wind_direction(self):
+    def get_wind_dir(self):
         resp = self._send('d')
         return float(resp)
 

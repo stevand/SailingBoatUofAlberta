@@ -1,8 +1,6 @@
-import boat_driver as bd
-
 class Navigator:
-    def __init__(self):
-        self._driver = bd.AbstractBoatDriver
+    def __init__(self, driver):
+        self._driver = driver
         # Current side of the boat the wind is coming off of
         self.tack = None
         # Sail tolerance is how close to the wind the boat is able to sail
@@ -14,12 +12,12 @@ class Navigator:
 
     def adjust(self):
         """Adjusts the angle of the sails to maximize velocity on current get_heading"""
-        self._driver.set_sail(min(abs(self._get_wind_rel(heading=self._driver.get_heading())), 90))
+        self._driver.set_sail(min(abs(self._driver.get_rel_wind_dir(), 90)))
 
     def turn(self, new_heading):
         """Turns the boat to face the new_heading. Returns -1 if not possible, 1 otherwise"""
         # Get distance between new get_heading and wind direction
-        if abs(self._get_wind_rel(heading=new_heading)) < self.tolerance:
+        if abs(self._driver.get_rel_wind_dir) < self.tolerance:
             return -1
 
         # If you need to turn to port
@@ -44,31 +42,11 @@ class Navigator:
         self.turn(new_heading)
         return None
 
-    def _get_wind_rel(self, heading):
-        """
-        Gets wind relative to the boat based upon current magnetic wind reading and IMU magnetic reading
-        A negative number from (0 -> -180] implies your on a port tack
-        A positive number from (0 ->  180] implies your on a starboard tack
-        """
-        # If wind direction is greater then boat direction
-        if self._driver.get_wind_direction() > heading:
-            # Get shortest wind angle relative to boat
-            if self._driver.get_wind_direction() > (heading + 180):
-                wind_rel = -(360 - self._driver.get_wind_direction() + heading)
-            else:
-                wind_rel = self._driver.get_wind_direction() - heading
-        # If boat direction is greater then wind direction
-        else:
-            # Get shortest wind angle relative to the boat
-            if heading > (self._driver.get_wind_direction() + 180):
-                wind_rel = (360 - heading + self._driver.get_wind_direction())
-            else:
-                wind_rel = -(heading - self._driver.get_wind_direction())
+    def tack():
         if wind_rel > 0:
-            self.tack = "STARBOARD"
+            return "STARBOARD"
         else:
-            self.tack = "PORT"
-        return wind_rel
+            return "PORT"
 
 
 
