@@ -1,6 +1,5 @@
 import abc
 
-
 class AbstractBoatDriver(abc.ABC):
     @abc.abstractmethod
     def close(self):

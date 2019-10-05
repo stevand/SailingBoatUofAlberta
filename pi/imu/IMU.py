@@ -1,4 +1,4 @@
-from .XdaCallback import XdaCallback
+from pi.imu.xda_callback import XdaCallback
 import xsensdeviceapi as xda
 
 from time import perf_counter, sleep

@@ -1,4 +1,4 @@
-class Navigator:
+class Helmsman:
     def __init__(self, driver):
         self._driver = driver
         # Current side of the boat the wind is coming off of
