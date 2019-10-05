@@ -25,7 +25,7 @@ class Helmsman:
         high = max(wind_dir, new_heading)
         low = min(wind_dir, new_heading)
         if high > (low + 180):
-            diff = abs((low - high) % 360)
+            diff = 360 - high + low
         else:
             diff = high - low
 
