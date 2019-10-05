@@ -1,4 +1,5 @@
-import rudder_controller
+from helmsman import rudder_controller
+
 
 class Helmsman:
     def __init__(self, driver):
@@ -18,11 +19,21 @@ class Helmsman:
         self._driver.set_sail(min(abs(self._driver.get_rel_wind_dir(), 90)))
 
     def turn(self, new_heading):
-        """Turns the boat to face the new_heading. Returns False if the new_heading is in the no-go zone, True otherwise"""
-        # Get distance between new get_heading and wind direction
-        if abs(self._driver.get_rel_wind_dir()) < self.tolerance:
+        """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""
+        # Get shortest distance between new_heading and wind direction
+        wind_dir = self._driver.get_wind_dir()
+        high = max(wind_dir, new_heading)
+        low = min(wind_dir, new_heading)
+        if high > (low + 180):
+            diff = abs((low - high) % 360)
+        else:
+            diff = high - low
+
+        # If new heading is in irons
+        if diff < self.tolerance:
             return False
-        
+
+        # Else if new heading is valid
         self.desired_heading = new_heading
         return True
 
@@ -41,8 +52,3 @@ class Helmsman:
             return "STARBOARD"
         else:
             return "PORT"
-
-
-
-
-
