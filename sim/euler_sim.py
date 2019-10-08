@@ -12,9 +12,10 @@ class EulerSimulator(Simulator):
         theta:      Heading relative to north
         omega:      Angular velocity of boat
         v:          Speed of the boat
-        a_tw:       Speed of true wind
-        psi_tw:     True wind direction  
-        psi_aw      Apparent wind direction
+        a:          Speed of true wind
+        a_ap:       Speed of apparent wind    
+        psi:        True wind direction  
+        psi_ap:      Apparent wind direction
         s_angle:    Sail angle
         r_angle:    Rudder angle
         s_force:    Force on sail
@@ -27,9 +28,9 @@ class EulerSimulator(Simulator):
         'theta',
         'omega'
         'v',
-        'a_tw',
-        'psi_tw',
-        'psi_aw',
+        'a',
+        'psi',
+        'psi_ap',
         's_angle',
         'r_angle',
         's_force',
@@ -38,7 +39,7 @@ class EulerSimulator(Simulator):
 
     def __init__(self, step_size, dc=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, p6=None, p7=None, p8=None, m=None, mmi=None):
         """Initialize the simulator with the following parameters:
-        step_size:          Time step size when using Euler's method
+        step_size:          Time step size (in ms) when using Euler's method
         dc:                 Drift coefficient
         fric_t:             Tangential friction
         fric_a:             Angular friction
@@ -60,30 +61,47 @@ class EulerSimulator(Simulator):
         self.m = m
         self.mmi = mmi
 
-    def next_state(self, prev_state):
+    def simulate(self, prev_state, interval):
+        fullsteps = interval // self.step_size
+        for _ in range(fullsteps):
+            prev_state = self.next_state(prev_state, self.step_size)
+
+        if interval % self.step_size > 0:
+            prev_state = self.next_state(prev_state, interval % self.step_size)         
+
+    def next_state(self, prev_state, step):
         if not isinstance(prev_state, self.state):
             raise Exception('prev_state must be of type given by self.state')
+
         ps = prev_state._asdict()
         next_state = self.state(
-            x = self.x(**ps),
-            y = self.y(**ps),
-            theta = self.theta(**ps),
-            v = self.v(**ps)
+            x = self.x(step, **ps),
+            y = self.y(step, **ps),
+            theta = self.theta(step, **ps),
+            v = self.v(step, **ps),
+            s_force = self.s_force(**ps)
+            r_force = self.r_force(**ps)
         )
         return next_state
 
-    def x(self, x=None, v=None, theta=None, psi_tw=None, a_tw=None):
-        x_dot = v * cos(theta) + self.dc * a_tw * cos(psi_tw)
-        return x + x_dot * self.step_size
+    def x(self, step, x=None, v=None, theta=None, psi=None, a=None):
+        x_dot = v * cos(theta) + self.dc * a * cos(psi)
+        return x + x_dot * step / 1000
 
-    def y(self, y=None, v=None, theta=None, psi_tw=None, a_tw=None):
-        y_dot = v * sin(theta) + self.dc * a_tw * sin(psi_tw)
-        return y + y_dot * self.step_size
+    def y(self, step, y=None, v=None, theta=None, psi=None, a=None):
+        y_dot = v * sin(theta) + self.dc * a * sin(psi)
+        return y + y_dot * step / 1000
 
-    def theta(self, theta, omega):
+    def theta(self, step, theta, omega):
         theta_dot = omega
-        return theta + theta_dot * self.step_size
+        return theta + theta_dot * step / 1000
 
-    def v(self, s_angle=None, s_force=None, r_angle=None, r_force=None, fric_t=None, v=None, m=None):
+    def v(self, step, s_angle=None, s_force=None, r_angle=None, r_force=None, fric_t=None, v=None, m=None):
         v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - fric_t * v**2) / m
-        return v + v_dot * self.step_size
+        return v + v_dot * step / 1000
+
+    def s_force(self, a_ap=None, s_angle=None, psi_ap=None):
+        return self.s_lift * a_ap * sin(s_angle - psi_ap)
+
+    def r_force(self, v=None, r_angle=None):
+        return self.r_lift * v * sin(r_angle)

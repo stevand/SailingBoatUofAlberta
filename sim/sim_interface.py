@@ -4,7 +4,7 @@ class SimulatorInterface():
     """A class that facilitates the stateful encapsulation of a simulator. It enables easy backwards/forwards traversal and importing/exporting of a simulation."""
 
     def __init__(self, simulator, interval):
-        """Initializes the interface with the given simulator and time interval between frames (in seconds)"""
+        """Initializes the interface with the given simulator and time interval between frames (in ms)"""
         self._states = []
         self._sim = simulator
         self._interval = interval
@@ -12,7 +12,7 @@ class SimulatorInterface():
     def simulate(self):
         """Runs the simulator and returns the next state"""
         old_state = self._states[-1]
-        next_state = self._sim.next_state(old_state, self._interval)
+        next_state = self._sim.simulate(old_state, self._interval)
         self._states.append(next_state)
         return current_state
     
