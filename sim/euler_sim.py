@@ -14,7 +14,11 @@ class EulerSimulator(Simulator):
         v:          Speed of the boat
         a_tw:       Speed of true wind
         psi_tw:     True wind direction  
-        psi_aw      Apparent wind direction    
+        psi_aw      Apparent wind direction
+        s_angle:    Sail angle
+        r_angle:    Rudder angle
+        s_force:    Force on sail
+        r_force:    Force on rudder
     """
 
     state = namedtuple('state', [
@@ -25,7 +29,11 @@ class EulerSimulator(Simulator):
         'v',
         'a_tw',
         'psi_tw',
-        ''
+        'psi_aw',
+        's_angle',
+        'r_angle',
+        's_force',
+        'r_force'
     ])
 
     def __init__(self, step_size, dc=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, p6=None, p7=None, p8=None, m=None, mmi=None):
@@ -36,11 +44,10 @@ class EulerSimulator(Simulator):
         fric_a:             Angular friction
         s_lift:             Sail lift
         r_lift:             Rudder lift
-        p6, p7, p8:         Geometric coefficients
+        p6, p7, p8:         Geometric coefficients (see paper)
         m:                  Mass of boat
         mmi:                Mass moment of inertia
         """
-        self.step_size = step_size
         self.step_size = step_size
         self.dc = dc
         self.fric_t = fric_t
@@ -58,12 +65,12 @@ class EulerSimulator(Simulator):
             raise Exception('prev_state must be of type given by self.state')
         ps = prev_state._asdict()
         next_state = self.state(
-            self.x(**ps),
-            self.y(**ps),
-            self.theta(**ps),
-            
+            x = self.x(**ps),
+            y = self.y(**ps),
+            theta = self.theta(**ps),
+            v = self.v(**ps)
         )
-        
+        return next_state
 
     def x(self, x=None, v=None, theta=None, psi_tw=None, a_tw=None):
         x_dot = v * cos(theta) + self.dc * a_tw * cos(psi_tw)
@@ -76,3 +83,7 @@ class EulerSimulator(Simulator):
     def theta(self, theta, omega):
         theta_dot = omega
         return theta + theta_dot * self.step_size
+
+    def v(self, s_angle=None, s_force=None, r_angle=None, r_force=None, fric_t=None, v=None, m=None):
+        v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - fric_t * v**2) / m
+        return v + v_dot * self.step_size
