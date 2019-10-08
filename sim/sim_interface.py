@@ -44,11 +44,12 @@ class SimulatorInterface():
     
     def export_states(self):
         """Returns a serialized (JSON) string representing the internal list of states"""
-        return json.dumps(self._states)
+        return json.dumps({'states': [state._asdict() for state in self._states]})
 
     def import_states(self, states):
         """Imports a serialized (JSON) string representing a list of states, and goes to the beggining of it"""
-        self._states = json.loads(states)
+        raw = json.loads(states)
+        self._states = [self._sim.state(**s) for s in raw]
 
 
     
