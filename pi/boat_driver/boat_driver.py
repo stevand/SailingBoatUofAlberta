@@ -1,6 +1,6 @@
 import serial
-from pi.imu.imu import IMU
-from pi.abstract_boat_driver import AbstractBoatDriver
+from imu.IMU import IMU
+from .abstract_boat_driver import AbstractBoatDriver
 
 
 class BoatDriver(AbstractBoatDriver):
