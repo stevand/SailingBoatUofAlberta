@@ -1,11 +1,11 @@
 import serial
-from pi.imu.imu import IMU
-from pi.abstract_boat_driver import AbstractBoatDriver
+from imu.IMU import IMU
+from .abstract_boat_driver import AbstractBoatDriver
 
 
 class BoatDriver(AbstractBoatDriver):
-    def __init__(self, port):
-        self._ser = serial.Serial(port, 9600, timeout=0.5)
+    def __init__(self, **kwargs):
+        self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=0.5)
         self._imu = IMU()
         self.set_rudder(0)
         self._rudder = 0

@@ -1,0 +1,8 @@
+{
+    "driver": {
+        "type": "boat_driver",
+        "kwargs": {
+            "port": "COM4"
+        }
+    }
+}

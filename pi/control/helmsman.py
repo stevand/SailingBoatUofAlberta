@@ -1,4 +1,4 @@
-from helmsman import rudder_controller
+from control import rudder_controller
 
 
 class Helmsman:
