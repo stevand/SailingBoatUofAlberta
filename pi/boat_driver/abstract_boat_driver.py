@@ -2,6 +2,10 @@ import abc
 
 class AbstractBoatDriver(abc.ABC):
     @abc.abstractmethod
+    def __init__(self, **kwargs):
+        pass
+
+    @abc.abstractmethod
     def close(self):
         """Gracefully closes the driver and all serial connections. Call before exiting."""
         pass
