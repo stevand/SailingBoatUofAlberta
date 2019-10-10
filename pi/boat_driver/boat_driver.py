@@ -7,6 +7,10 @@ class BoatDriver(AbstractBoatDriver):
     def __init__(self, port):
         self._ser = serial.Serial(port, 9600, timeout=0.5)
         self._imu = IMU()
+        self.set_rudder(0)
+        self._rudder = 0
+        self.set_sail(0)
+        self._sail = 0
 
     def close(self):
         self._ser.close()
@@ -26,11 +30,19 @@ class BoatDriver(AbstractBoatDriver):
 
     def set_rudder(self, angle):
         resp = self._send('r' + str(angle+45)) #maps angle from (-45, 45) to (0, 90)
+        self._rudder = angle
         print('Setting rudder to', resp, 'degrees')
+
+    def get_rudder(self):
+        return self._rudder
 
     def set_sail(self, angle):
         resp = self._send('s' + str(angle))
+        self._sail = angle
         print('Setting sail to', resp, 'degrees')
+
+    def get_sail(self):
+        return self._sail
 
     # sends message to arduino
     def _send(self, cmd):
