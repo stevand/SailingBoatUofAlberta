@@ -34,6 +34,14 @@ class AbstractBoatDriver(abc.ABC):
         0 points it straight ahead."""
         pass
 
+    def get_sail(self):
+        """Returns the angle of the sail (0, 90)"""
+        pass
+
+    def get_rudder(self):
+        """Returns the angle of the rudder (-45, 45)"""
+        pass
+
     def get_rel_wind_dir(self):
         """
         Gets the wind direction relative to the boat based upon current magnetic wind reading and IMU magnetic reading
@@ -57,3 +65,11 @@ class AbstractBoatDriver(abc.ABC):
             else:
                 wind_rel = -(heading - abs_dir)
         return wind_rel
+
+    def status(self):
+        return {
+            'wind_dir': self.get_wind_dir(),
+            'heading': self.get_heading(),
+            'position': self.get_position(),
+
+        }
