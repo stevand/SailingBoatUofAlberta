@@ -1,8 +1,11 @@
 {
     "driver": {
-        "type": "boat_driver",
+        "type": "test_driver",
         "kwargs": {
             "port": "COM4"
         }
+    },
+    "helmsman": {
+        "enabled": false
     }
 }
