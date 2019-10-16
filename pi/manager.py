@@ -9,4 +9,4 @@ with open('config.json') as config_file:
 
 BoatDriver = import_module('boat_driver.'+config['driver']['type']).BoatDriver
 driver = BoatDriver(config['driver']['kwargs'])
-helmsman = Helmsman(driver)
+helmsman = Helmsman(driver, kwargs=config['helmsman']['rudder_controller'])
