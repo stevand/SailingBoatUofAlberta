@@ -9,6 +9,7 @@ with open('config.json') as config_file:
     )
 
 BoatDriver = import_module('boat_driver.'+config['driver']['type']).BoatDriver
+<<<<<<< HEAD
 #driver = BoatDriver()
 driver = BoatDriver(**config['driver']['kwargs'])
 server_params = [driver]
@@ -18,3 +19,8 @@ if (config['helmsman']['enabled']):
 
 server = flask_server.create_app(*server_params)
 server.run()
+=======
+print(config['driver']['kwargs'])
+driver = BoatDriver(**config['driver']['kwargs'])
+helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
+>>>>>>> master

@@ -1,22 +1,25 @@
 from control import rudder_controller
-
+import threading
 
 class Helmsman:
-    def __init__(self, driver):
+    def __init__(self, driver, **kwargs):
         self._driver = driver
         # Sail tolerance is how close to the wind the boat is able to sail
         self.tolerance = 30
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
-        # Starts rudder controller
         self.desired_heading = 0
-        rudder_controller.start_controller(driver, lambda: self.desired_heading)
+        
+        # Starts rudder controller
+        if kwargs['rudder_controller']['enabled']:
+            if kwargs['rudder_controller']['type'] == 'pid':
+                rudder_controller.start_controller(driver, lambda: self.desired_heading)
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)
 
     def adjust(self):
         """Adjusts the angle of the sails to maximize velocity on current get_heading"""
-        self._driver.set_sail(min(abs(self._driver.get_rel_wind_dir(), 90)))
+        self._driver.set_sail(min(abs(self._driver.get_rel_wind_dir()), 90))
 
     def turn(self, new_heading):
         """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""

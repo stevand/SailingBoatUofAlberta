@@ -1,16 +1,22 @@
 import serial
 from imu.IMU import IMU
 from .abstract_boat_driver import AbstractBoatDriver
+from time import perf_counter
+from threading import Lock
 
+lock = Lock()
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
+        print('kwargs', kwargs)
         self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=0.5)
         self._imu = IMU()
         self.set_rudder(0)
         self._rudder = 0
         self.set_sail(0)
         self._sail = 0
+        self._lastupdate = perf_counter()-1
+        self._status = {}
 
     def close(self):
         self._ser.close()
@@ -29,7 +35,8 @@ class BoatDriver(AbstractBoatDriver):
         return float(resp)
 
     def set_rudder(self, angle):
-        resp = self._send('r' + str(angle+45)) #maps angle from (-45, 45) to (0, 90)
+        # maps angle from (-45, 45) to (0, 90)
+        resp = self._send('r' + str(int(angle+45)))
         self._rudder = angle
         print('Setting rudder to', resp, 'degrees')
 
@@ -37,14 +44,30 @@ class BoatDriver(AbstractBoatDriver):
         return self._rudder
 
     def set_sail(self, angle):
-        resp = self._send('s' + str(angle))
+        resp = self._send('s' + str(int(angle)))
         self._sail = angle
         print('Setting sail to', resp, 'degrees')
 
     def get_sail(self):
         return self._sail
 
+    def status(self):
+        if perf_counter() - self._lastupdate > 1:
+            self._status = {
+                'wind_dir': self.get_wind_dir(),
+                'rel_wind_dir': self.get_rel_wind_dir(),
+                'heading': self.get_heading(),
+                'position': self.get_position(),
+                'sail': self.get_sail(),
+                'rudder': self.get_rudder()
+            }
+            self._lastupdate = perf_counter()
+
+        return self._status
+
     # sends message to arduino
     def _send(self, cmd):
-        self._ser.write((cmd+'\n').encode('utf-8'))
-        return self._ser.read_until().decode('utf-8').strip()
+        with lock:
+            self._ser.write((cmd+'\n').encode('utf-8'))
+            resp = self._ser.read_until().decode('utf-8').strip()
+        return resp

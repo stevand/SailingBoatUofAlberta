@@ -1,8 +1,17 @@
 {
+    "goal": "debug",
     "driver": {
         "type": "test_driver",
         "kwargs": {
-            "port": "COM4"
+            "arduino_port": "COM4"
+        }
+    },
+    "helmsman": {
+        "kwargs": {
+            "rudder_controller": {
+                "enabled": false,
+                "type": "pid"
+            }
         }
     },
     "helmsman": {
