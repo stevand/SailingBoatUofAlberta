@@ -13,8 +13,5 @@
                 "type": "pid"
             }
         }
-    },
-    "helmsman": {
-        "enabled": false
     }
 }

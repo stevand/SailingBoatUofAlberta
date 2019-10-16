@@ -9,6 +9,6 @@ with open('config.json') as config_file:
     )
 
 BoatDriver = import_module('boat_driver.'+config['driver']['type']).BoatDriver
-print(config['driver']['kwargs'])
+
 driver = BoatDriver(**config['driver']['kwargs'])
 helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
