@@ -8,13 +8,25 @@ lock = Lock()
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
-        print('kwargs', kwargs)
-        self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=0.5)
+        self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=15) #initial timeout set to 15 seconds
         self._imu = IMU()
+
+        #wait for Arduino to initialize
+        print('Connecting to Arduino')
+        msg = self._ser.read_until().decode('utf-8').strip()
+        if msg != 'ready':
+            print('msg:', msg)
+            raise Exception('Could not connect to Arduino')
+        print('Succesfully connected to Arduino')
+        
+        self._ser.timeout = 0.5 #set timeout to .5 seconds once initialization is over
+
+        #initialize sails and rudders
         self.set_rudder(0)
         self._rudder = 0
         self.set_sail(0)
         self._sail = 0
+
         self._lastupdate = perf_counter()-1
         self._status = {}
 
