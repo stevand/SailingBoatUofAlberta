@@ -15,4 +15,4 @@ helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
 
 if config['goal']=='run':
     server = flask_server.create_app(driver, helmsman, **config['server']['kwargs'])
-    server.run()
+    server.run(host=config['server']['host'])
