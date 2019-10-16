@@ -8,6 +8,7 @@ lock = Lock()
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
+        print('kwargs', kwargs)
         self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=0.5)
         self._imu = IMU()
         self.set_rudder(0)
@@ -31,7 +32,6 @@ class BoatDriver(AbstractBoatDriver):
 
     def get_wind_dir(self):
         resp = self._send('d')
-        print("response is ", resp)
         return float(resp)
 
     def set_rudder(self, angle):
@@ -39,7 +39,7 @@ class BoatDriver(AbstractBoatDriver):
         resp = self._send('r' + str(int(angle+45)))
         self._rudder = angle
         print('Setting rudder to', resp, 'degrees')
-_
+
     def get_rudder(self):
         return self._rudder
 
