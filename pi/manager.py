@@ -9,12 +9,6 @@ with open('config.json') as config_file:
     )
 
 BoatDriver = import_module('boat_driver.'+config['driver']['type']).BoatDriver
-#driver = BoatDriver()
+print(config['driver']['kwargs'])
 driver = BoatDriver(**config['driver']['kwargs'])
-server_params = [driver]
-if (config['helmsman']['enabled']):
-    helmsman = Helmsman(driver)
-    server_params.append(driver)
-
-server = flask_server.create_app(*server_params)
-server.run()
+helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
