@@ -17,8 +17,7 @@ void setup()
 	pinMode(WIND_DIRECTION_PIN, INPUT);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
-	sail.write(0);
-	rudder.write(45);
+	Serial.println("ready");
 }
 
 void loop()
