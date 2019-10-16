@@ -1,7 +1,7 @@
 {
-    "goal": "debug",
+    "goal": "run",
     "driver": {
-        "type": "test_driver",
+        "type": "boat_driver",
         "kwargs": {
             "arduino_port": "COM4"
         }
@@ -12,6 +12,11 @@
                 "enabled": false,
                 "type": "pid"
             }
+        }
+    },
+    "server":{
+        "kwargs":{
+
         }
     }
 }

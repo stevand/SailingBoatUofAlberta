@@ -12,3 +12,7 @@ BoatDriver = import_module('boat_driver.'+config['driver']['type']).BoatDriver
 
 driver = BoatDriver(**config['driver']['kwargs'])
 helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
+
+if config['goal']=='run':
+    server = flask_server.create_app(driver, helmsman, **config['server']['kwargs'])
+    server.run()
