@@ -11,8 +11,13 @@ class Helmsman:
         self.desired_heading = 0
         
         # Starts rudder controller
+<<<<<<< HEAD
         if kwargs['rudder_controller']['enabled']:
             if kwargs['rudder_controller']['type'] == 'pid':
+=======
+        if kwargs['enabled']:
+            if kwargs['type'] == 'pid':
+>>>>>>> 243a18226b2c365d01beac0371c5cbf1399cecec
                 rudder_controller.start_controller(driver, lambda: self.desired_heading)
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)
