@@ -1,6 +1,6 @@
 from importlib import import_module
 import json
-from control.helmsman import Helmsman
+from control import Helmsman
 
 with open('config.json') as config_file:
     config = json.loads(
