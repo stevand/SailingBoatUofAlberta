@@ -53,7 +53,7 @@ void setRudder(int angle)
 
 void setSail(int angle)
 {
-	int adjusted = map(angle, 0, 90, 20, 83); //angles adjusted for our particular winch
+	int adjusted = map(angle, 0, 90, 26, 83); //angles adjusted for our particular winch
 	Serial.println(angle);
 	sail.write(adjusted);
 }

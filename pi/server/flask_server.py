@@ -17,8 +17,16 @@ def create_app(driver, helmsman=None):
     def control():
         data = request.json
         print(data)
-        driver.set_sail(data['sail_angle'])
-        driver.set_rudder(data['rudder_angle'])
+
+        try:
+            driver.set_sail(data['sail_angle'])
+        except ValueError:
+            return 'Invalid sail angle'
+        try:
+            driver.set_rudder(data['rudder_angle'])
+        except ValueError:
+            return 'Invalid rudder angle'
+
         return 'Set rudder to {} and sail to {}'.format(data['rudder_angle'], data['sail_angle'])
 
     @app.route('/rudder_controller', methods=['PUT'])

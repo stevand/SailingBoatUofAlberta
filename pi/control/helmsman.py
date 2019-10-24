@@ -1,5 +1,6 @@
 from control import rudder_controller
-import threading
+from threading import Lock
+
 
 class Helmsman:
     def __init__(self, driver, **kwargs):
@@ -9,11 +10,15 @@ class Helmsman:
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
         self.desired_heading = 0
-        
+
         # Starts rudder controller
         if kwargs['rudder_controller']['enabled']:
+            self.rudder_controller_enabled = True
             if kwargs['rudder_controller']['type'] == 'pid':
-                rudder_controller.start_controller(driver, lambda: self.desired_heading)
+                rudder_controller.start_controller(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled)
+        else:
+            self.rudder_controller_enabled = False
+
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)
 
