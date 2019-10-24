@@ -9,7 +9,7 @@ class BoatDriver(AbstractBoatDriver):
 
     def get_heading(self):
         print('queried for heading:', 0)
-        return 0
+        return 30
 
     def get_position(self):
         print('queried for position:', 0, 0)
@@ -17,8 +17,8 @@ class BoatDriver(AbstractBoatDriver):
 
     def get_wind_dir(self):
         super().get_wind_dir()
-        print('queried for wind_dir:', 0)
-        return 0
+        print('queried for wind_dir:')
+        return 130
 
     def set_rudder(self, angle):
         super().set_rudder(angle)

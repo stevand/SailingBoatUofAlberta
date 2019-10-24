@@ -1,4 +1,4 @@
-from control import rudder_controller
+from control import rudder_controller, sail_controller
 from threading import Lock
 
 
@@ -12,12 +12,12 @@ class Helmsman:
         self.desired_heading = 0
 
         # Starts rudder controller
-        if kwargs['rudder_controller']['enabled']:
-            self.rudder_controller_enabled = True
-            if kwargs['rudder_controller']['type'] == 'pid':
-                rudder_controller.start_controller(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled)
-        else:
-            self.rudder_controller_enabled = False
+        self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']
+        rudder_controller.start(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled)
+
+        self.sail_controller_enabled = kwargs['sail_controller']['enabled']
+        self.maximize_speed = True
+        sail_controller.start(driver, lambda: self.sail_controller_enabled, go_fast=lambda: self.maximize_speed, interval=kwargs['sail_controller']['interval'])
 
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)

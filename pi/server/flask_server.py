@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import json
 
+
 def create_app(driver, helmsman=None):
     app = Flask(__name__)
     cors = CORS(app)
@@ -29,11 +30,12 @@ def create_app(driver, helmsman=None):
 
         return 'Set rudder to {} and sail to {}'.format(data['rudder_angle'], data['sail_angle'])
 
-    @app.route('/rudder_controller', methods=['PUT'])
+    @app.route('/helmsman', methods=['PUT'])
     @cross_origin()
     def rudder_controller():
         data = request.json
-        helmsman.rudder_controller_enabled = data['enabled']
-        return 'Rudder enabled is {}'.format(data['enabled'])
-    
+        helmsman.rudder_controller_enabled = data['rudder_controller']['enabled']
+        helmsman.sail_controller_enabled = data['sail_controller']['enabled']
+        return 'Rudder Controller is {}\n Sail Controller is {}'.format(helmsman.rudder_controller_enabled, helmsman.sail_controller_enabled)
+
     return app
