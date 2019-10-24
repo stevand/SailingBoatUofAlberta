@@ -46,4 +46,11 @@ def create_app(driver, helmsman=None):
         print('Shutting down server')
         return 'Server shut down'
 
+    @app.route('/turn', methods=['PUT'])
+    @cross_origin()
+    def turn():
+        data = request.json
+        helmsman.turn(data['desired_heading'])
+        return 'Turning to {}'.format(data['desired_heading'])
+
     return app

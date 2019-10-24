@@ -48,7 +48,7 @@ class BoatDriver(AbstractBoatDriver):
         super().set_rudder(angle)
         resp = self._send('r' + str(int(angle+45)))
         self._rudder = angle
-        print('Setting rudder to', resp, 'degrees')
+        print('Setting rudder to', int(resp)-45, 'degrees')
 
     def set_sail(self, angle):
         super().set_sail(angle)

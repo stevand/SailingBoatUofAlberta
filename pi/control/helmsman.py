@@ -9,11 +9,11 @@ class Helmsman:
         self.tolerance = 30
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
-        self.desired_heading = 0
+        self.desired_heading = 180
 
         # Starts rudder controller
         self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']
-        rudder_controller.start(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled)
+        rudder_controller.start(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
 
         self.sail_controller_enabled = kwargs['sail_controller']['enabled']
         self.maximize_speed = True

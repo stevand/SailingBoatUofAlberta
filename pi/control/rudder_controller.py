@@ -3,7 +3,7 @@ from time import sleep
 import threading
 
 
-def start(driver, get_desired_heading, is_enabled, interval=0.1, p=0.05, i=0.01, d=0):
+def start(driver, get_desired_heading, is_enabled, interval=2, p=0.1, i=0.01, d=0):
     """Starts a PID in a seperate thread that attempts to always reach a desired heading. The thread will close if the program exits.
     Parameters:
         driver: An instance of an AbstractBoatDriver
@@ -14,6 +14,7 @@ def start(driver, get_desired_heading, is_enabled, interval=0.1, p=0.05, i=0.01,
         d: Differential coefficient of PID
         """
     pid = PID(p, i, d, sample_time=interval, output_limits=(-45, 45))
+    pid.setpoint = 0
     # thread is created as a daemon so that it will close if the program exits
     control_thread = threading.Thread(target=rudder_controller, daemon=True, args=(
         driver, pid, interval, get_desired_heading, is_enabled))
@@ -26,14 +27,17 @@ def start(driver, get_desired_heading, is_enabled, interval=0.1, p=0.05, i=0.01,
 
 def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
     while True:
-        if pid.setpoint != get_desired_heading():
-            pid.setpoint = get_desired_heading()
-
         if is_enabled():
             try:
-                output = pid(driver.get_heading())
+                output = pid(shortest_path(get_desired_heading(), driver.get_heading()))
                 driver.set_rudder(output)
             except Exception:
                 print('Disabling rudder_controller as it could not read from driver')
                 break
         sleep(interval)
+
+def shortest_path(desired, current):
+    if abs(current-desired) < abs(current-desired-360):
+        return current - desired
+    else:
+        return current-desired-360
