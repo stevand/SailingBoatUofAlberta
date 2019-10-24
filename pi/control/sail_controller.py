@@ -12,10 +12,14 @@ def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=3):
 def sail_controller(driver, is_enabled, go_fast, interval):
     while True:
         if is_enabled():
-            if go_fast():
-                maximize_speed(driver)
-            else:
-                minimize_speed(driver)
+            try:
+                if go_fast():
+                    maximize_speed(driver)
+                else:
+                    minimize_speed(driver)
+            except Exception:
+                print('Disabling sail_controller as it could not read from driver.')
+                break
         sleep(interval)
 
 

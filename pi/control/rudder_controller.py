@@ -30,6 +30,10 @@ def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
             pid.setpoint = get_desired_heading()
 
         if is_enabled():
-            output = pid(driver.get_heading())
-            driver.set_rudder(output)
+            try:
+                output = pid(driver.get_heading())
+                driver.set_rudder(output)
+            except Exception:
+                print('Disabling rudder_controller as it could not read from driver')
+                break
         sleep(interval)

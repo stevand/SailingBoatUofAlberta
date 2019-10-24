@@ -9,7 +9,6 @@ lock = Lock()
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=15)  # initial timeout set to 15 seconds
         self._imu = IMU()
 
@@ -22,6 +21,8 @@ class BoatDriver(AbstractBoatDriver):
         print('Succesfully connected to Arduino')
         
         self._ser.timeout = 0.5  # set timeout to .5 seconds once initialization is over
+
+        super().__init__(**kwargs)
 
         self._lastupdate = perf_counter()-1
         self._status = {}
