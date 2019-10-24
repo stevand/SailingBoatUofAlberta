@@ -38,4 +38,12 @@ def create_app(driver, helmsman=None):
         helmsman.sail_controller_enabled = data['sail_controller']['enabled']
         return 'Rudder Controller is {}\n Sail Controller is {}'.format(helmsman.rudder_controller_enabled, helmsman.sail_controller_enabled)
 
+    @app.route('/shutdown', methods=['PUT'])
+    @cross_origin()
+    def shutdown():
+        driver.close()
+        request.environ.get('werkzeug.server.shutdown')()
+        print('Shutting down server')
+        return 'Server shut down'
+
     return app
