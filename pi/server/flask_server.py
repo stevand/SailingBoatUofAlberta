@@ -13,7 +13,11 @@ def create_app(driver, helmsman=None):
     def status():
         return json.dumps(
             {
+<<<<<<< HEAD
                 'boat_state': driver.status(), 
+=======
+                'status': driver.status(), 
+>>>>>>> f39b1cb117847946c56a3061d82316afa6eed768
                 'helmsman': helmsman.status()
             })
 
