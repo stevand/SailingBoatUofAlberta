@@ -11,13 +11,17 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
 import euler_simplified2 as e1
+import json
 
+with open('sim_params.json', mode='r') as param_file:
+    sim_params = json.load(param_file)
+print(sim_params)
 
 dt=0.0025
 sim_time=0.5
 simsteps = round(sim_time // dt)
-Sim1=e1.EulerSimulator(dt/100.)
-Sim1.V=1
+Sim1=e1.EulerSimulator(**sim_params)
+"""Sim1.V=1
 Sim1.beta=0.5
 Sim1.fric_a=0.05
 Sim1.fric_t=0.5
@@ -27,7 +31,7 @@ Sim1.m=1
 Sim1.r_lift=0.1
 Sim1.r_r=1
 Sim1.r_s=1
-Sim1.s_lift=0.2
+Sim1.s_lift=0.2"""
 Sim1.state.omega=0
 Sim1.state.r_angle=30/360*np.pi*2
 Sim1.state.s_angle=-30/360*np.pi*2
@@ -39,7 +43,7 @@ Sim1.state.y=2
 state=Sim1.state
 fig=plt.figure(figsize=(21,7))
 ax1 = plt.subplot(1, 3, 1)
-r=2.5;
+r=2.5
 theta=np.linspace(0.0,2.0*np.pi,100)
 x=r*np.cos(theta)
 y=r*np.sin(theta)
