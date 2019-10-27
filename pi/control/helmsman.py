@@ -60,3 +60,15 @@ class Helmsman:
             return "STARBOARD"
         else:
             return "PORT"
+
+    def status(self):
+        return {
+            'tolerance': self.tolerance,
+            'desired_heading': self.desired_heading,
+            'rudder_controller': {
+                'enabled': self.rudder_controller_enabled
+            },
+            'sail_controller': {
+                'enabled': self.sail_controller_enabled
+            }
+        }

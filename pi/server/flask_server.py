@@ -11,7 +11,11 @@ def create_app(driver, helmsman=None):
     @app.route('/status')
     @cross_origin()
     def status():
-        return json.dumps(driver.status())
+        return json.dumps(
+            {
+                'status': driver.status(), 
+                'helmsman': helmsman.status()
+            })
 
     @app.route('/control', methods=['PUT'])
     @cross_origin()
