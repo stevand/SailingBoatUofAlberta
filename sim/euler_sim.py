@@ -63,15 +63,19 @@ class EulerSimulator(Simulator):
 
     def simulate(self, prev_state, interval):
         fullsteps = interval // self.step_size
+
+        state = prev_state
         for _ in range(fullsteps):
-            prev_state = self.next_state(prev_state, self.step_size)
+            state = self.next_state(state, self.step_size)
 
         if interval % self.step_size > 0:
-            prev_state = self.next_state(prev_state, interval % self.step_size)         
+            state = self.next_state(state, interval % self.step_size) 
+
+        return state        
 
     def next_state(self, prev_state, step):
-        if not isinstance(prev_state, self.state):
-            raise Exception('prev_state must be of type given by self.state')
+        #if not isinstance(prev_state, self.state):
+        #    raise Exception('prev_state must be of type given by self.state')
 
         ps = prev_state._asdict()
         next_state = self.state(

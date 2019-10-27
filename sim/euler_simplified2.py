@@ -30,7 +30,7 @@ class EulerSimulator(Simulator):
         'r_force'
     ])
 
-    def __init__(self, step_size, beta=None, V=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, r_s=None, r_r=None, l=None, m=None, J=None):
+    def __init__(self, step_size, beta=None, V=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, r_s=None, r_r=None, L=None, m=None, J=None):
         """Initialize the simulator with the following parameters:
         step_size:          Time step size (in ms) when using Euler's method
         beta:               Drift coefficient
@@ -41,7 +41,7 @@ class EulerSimulator(Simulator):
         r_lift:             Rudder lift
         r_s:                Distance from G to mast
         r_r:                Distance from G to rudder
-        l:                  Distance between mast and rudder
+        L:                  Distance between mast and rudder
         m:                  Mass of boat
         J:                  Angular inertia
         """
@@ -54,16 +54,20 @@ class EulerSimulator(Simulator):
         self.r_lift = r_lift
         self.r_s = r_s
         self.r_r = r_r
-        self.l = l
+        self.L = L
         self.m = m
         self.J = J
 
-    def simulate(self, interval):
+    def simulate(self, prev_state, interval):
         fullsteps = round(interval // self.step_size)
-        for _ in range(fullsteps):
-            self.euler_f()
+        state = prev_state
 
-    def euler_f(self):
+        for _ in range(fullsteps):
+            state = self.euler_f(state)
+
+        return state
+
+    def euler_f(self, prev_state):
         self.state.s_force=self.s_lift *( self.V*cos(self.state.theta+self.state.s_angle)-self.state.v*sin(self.state.s_angle))
         self.state.r_force=self.r_lift * self.state.v * sin(self.state.r_angle)
         x_dot = self.state.v * cos(self.state.theta)
@@ -76,5 +80,5 @@ class EulerSimulator(Simulator):
         self.state.v=self.state.v+v_dot*self.step_size
         self.state.theta=self.state.theta+theta_dot*self.step_size
         self.state.omega=self.state.omega+omega_dot*self.step_size
-        
+        return 1
  
