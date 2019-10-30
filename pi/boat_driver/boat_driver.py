@@ -9,7 +9,6 @@ lock = Lock()
 
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
         self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=15)  # initial timeout set to 15 seconds
         self._imu = IMU()
 
@@ -23,11 +22,7 @@ class BoatDriver(AbstractBoatDriver):
         
         self._ser.timeout = 0.5  # set timeout to .5 seconds once initialization is over
 
-        # initialize sails and rudders
-        self.set_rudder(0)
-        self._rudder = 0
-        self.set_sail(0)
-        self._sail = 0
+        super().__init__(**kwargs)
 
         self._lastupdate = perf_counter()-1
         self._status = {}
@@ -50,20 +45,15 @@ class BoatDriver(AbstractBoatDriver):
 
     def set_rudder(self, angle):
         # maps angle from (-45, 45) to (0, 90)
+        super().set_rudder(angle)
         resp = self._send('r' + str(int(angle+45)))
         self._rudder = angle
-        print('Setting rudder to', resp, 'degrees')
-
-    def get_rudder(self):
-        return self._rudder
+        print('Setting rudder to', int(resp)-45, 'degrees')
 
     def set_sail(self, angle):
+        super().set_sail(angle)
         resp = self._send('s' + str(int(angle)))
-        self._sail = angle
         print('Setting sail to', resp, 'degrees')
-
-    def get_sail(self):
-        return self._sail
 
     def status(self):
         if perf_counter() - self._lastupdate > 1:

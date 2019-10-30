@@ -4,7 +4,11 @@ import abc
 class AbstractBoatDriver(abc.ABC):
     @abc.abstractmethod
     def __init__(self, **kwargs):
-        pass
+        """Initializes the boat, setting sails and rudder to 0 degrees"""
+        self.set_sail(0)
+        self.set_rudder(0)
+        self.__sail = 0
+        self.__rudder = 0
 
     @abc.abstractmethod
     def close(self):
@@ -28,8 +32,10 @@ class AbstractBoatDriver(abc.ABC):
 
     @abc.abstractmethod
     def set_sail(self, angle):
-        """Tightens/loosens the sheets so that the sails may reach the given angle (0-90) away from the center"""
-        pass
+        """Tightens/loosens the sheets so that the sails may reach the given angle (0-90) away from the center."""
+        if angle < 0 or angle > 90:
+            raise ValueError('angle should be in [-45, 45]')
+        self.__sail = angle
 
     @abc.abstractmethod
     def set_rudder(self, angle):
@@ -37,15 +43,17 @@ class AbstractBoatDriver(abc.ABC):
         (0 -> -45] points the rudder the farther to the right
         (0 -> 45] points the rudder the farther to the left
         0 points it straight ahead."""
-        pass
+        if abs(angle) > 45:
+            raise ValueError('angle should be in [-45, 45]')
+        self.__rudder = angle
 
     def get_sail(self):
         """Returns the angle of the sail (0, 90)"""
-        pass
+        return self.__sail
 
     def get_rudder(self):
         """Returns the angle of the rudder (-45, 45)"""
-        pass
+        return self.__rudder
 
     def get_wind_dir_rel(self):
         """
