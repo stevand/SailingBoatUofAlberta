@@ -26,14 +26,23 @@ class SimulatorInterface():
     def frames(self):
         """Returns a list of all frames in sequential order. Pinky promise not to change anything"""
         return self._frames
-    
-    def export_states(self):
-        """Returns a serialized (JSON) string representing the internal list of s   tates"""
-        return json.dumps(self._states)
 
-    def import_states(self, states):
-        """Imports a serialized (JSON) string representing a list of states, and goes to the beggining of it"""
-        self._states = json.loads(states)
+    def frame_generator(self):
+        """Returns a generator that yields all frames in sequential order"""
+        i = 0
+        while True:
+            if (i >= len(self.frames())): 
+                i = 0
+            yield self.frames()[i]
+            i +=1
+    
+    def export_frames(self):
+        """Returns a serialized (JSON) string representing the internal list of frames"""
+        return json.dumps([frame.tojson() for frame in self.frames()])
+
+    def import_frames(self, frames):
+        """Imports a serialized (JSON) string representing a list of frames, and goes to the beginning of it"""
+        self._frames = json.loads(frames)
 
 
     

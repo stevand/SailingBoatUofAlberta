@@ -5,7 +5,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tkinter as tk
-import euler_simplified2 as e1
 from euler_sim2 import EulerSimulator
 import json
 
