@@ -17,8 +17,7 @@ void setup()
 	pinMode(WIND_DIRECTION_PIN, INPUT);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
-	sail.write(0);
-	rudder.write(45);
+	Serial.println("ready");
 }
 
 void loop()
@@ -54,7 +53,7 @@ void setRudder(int angle)
 
 void setSail(int angle)
 {
-	int adjusted = map(angle, 0, 90, 20, 83); //angles adjusted for our particular winch
+	int adjusted = map(angle, 0, 90, 26, 83); //angles adjusted for our particular winch
 	Serial.println(angle);
 	sail.write(adjusted);
 }

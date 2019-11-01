@@ -1,6 +1,11 @@
 import abc
 
+
 class AbstractBoatDriver(abc.ABC):
+    @abc.abstractmethod
+    def __init__(self, **kwargs):
+        pass
+
     @abc.abstractmethod
     def close(self):
         """Gracefully closes the driver and all serial connections. Call before exiting."""
@@ -34,26 +39,38 @@ class AbstractBoatDriver(abc.ABC):
         0 points it straight ahead."""
         pass
 
-    def get_rel_wind_dir(self):
+    def get_sail(self):
+        """Returns the angle of the sail (0, 90)"""
+        pass
+
+    def get_rudder(self):
+        """Returns the angle of the rudder (-45, 45)"""
+        pass
+
+    def get_wind_dir_rel(self):
         """
-        Gets the wind direction relative to the boat based upon current magnetic wind reading and IMU magnetic reading
+        Gets the wind direction relative to the boat based upon wind vane
         A negative number from (0 -> -180] implies you're on a port tack
         A positive number from (0 ->  180] implies you're on a starboard tack
         """
-        # If wind direction is greater then boat direction
-        abs_dir = self.get_wind_dir()
-        heading = self.get_heading()
-        if abs_dir > heading:
-            # Get shortest wind angle relative to boat
-            if abs_dir > (heading + 180):
-                wind_rel = -(360 - abs_dir + heading)
-            else:
-                wind_rel = abs_dir - heading
-        # If boat direction is greater then wind direction
-        else:
-            # Get shortest wind angle relative to the boat
-            if heading > (abs_dir + 180):
-                wind_rel = (360 - heading + abs_dir)
-            else:
-                wind_rel = -(heading - abs_dir)
-        return wind_rel
+        wind = self.get_wind_dir()
+        if wind > 180:
+            wind = -(360-wind)
+        return wind
+
+    def get_wind_dir_true(self):
+        """
+        Gets the true magnetic wind direction calculated by using the boats compass and get_wind_dir_rel()
+        """
+        return (self.get_wind_dir_rel() + self.get_heading()) % 360
+
+    def status(self):
+        """Returns the status of the boat"""
+        return {
+            'wind_dir': self.get_wind_dir(),
+            'rel_wind_dir': self.get_wind_dir_rel(),
+            'heading': self.get_heading(),
+            'position': self.get_position(),
+            'sail': self.get_sail(),
+            'rudder': self.get_rudder()
+        }

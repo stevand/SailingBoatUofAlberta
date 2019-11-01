@@ -1,4 +1,4 @@
-from xda_callback import XdaCallback
+from .xda_callback import XdaCallback
 import xsensdeviceapi as xda
 
 from time import perf_counter, sleep
