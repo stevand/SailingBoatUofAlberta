@@ -1,2 +1,4 @@
 simple-pid==0.2.3
 pyserial==3.4
+Flask==1.1.1
+Flask-Cors==3.0.8

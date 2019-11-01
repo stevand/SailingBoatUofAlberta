@@ -1,4 +1,4 @@
-from control import rudder_controller
+from control import rudder_controller, sail_controller
 from threading import Lock
 
 
@@ -9,15 +9,15 @@ class Helmsman:
         self.tolerance = 30
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
-        self.desired_heading = 0
+        self.desired_heading = 180
 
         # Starts rudder controller
-        if kwargs['rudder_controller']['enabled']:
-            self.rudder_controller_enabled = True
-            if kwargs['rudder_controller']['type'] == 'pid':
-                rudder_controller.start_controller(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled)
-        else:
-            self.rudder_controller_enabled = False
+        self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']
+        rudder_controller.start(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
+
+        self.sail_controller_enabled = kwargs['sail_controller']['enabled']
+        self.maximize_speed = True
+        sail_controller.start(driver, lambda: self.sail_controller_enabled, go_fast=lambda: self.maximize_speed, interval=kwargs['sail_controller']['interval'])
 
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)
@@ -60,3 +60,15 @@ class Helmsman:
             return "STARBOARD"
         else:
             return "PORT"
+
+    def status(self):
+        return {
+            'tolerance': self.tolerance,
+            'desired_heading': self.desired_heading,
+            'rudder_controller': {
+                'enabled': self.rudder_controller_enabled
+            },
+            'sail_controller': {
+                'enabled': self.sail_controller_enabled
+            }
+        }
