@@ -4,7 +4,7 @@ from math import cos, sin
 
 class EulerSimulator(Simulator):
     """Simulator that works by finding numerical approximations for the differential equations outlined 
-    in "Sailboat as a Windmill" through a naive approach with Euler's method.
+    in "Sailboat Model" through a naive approach with Euler's method.
     
     The state is a named tuple that contains the following properties:
         x:          Position of boat on east-west axis
@@ -106,24 +106,29 @@ class EulerSimulator(Simulator):
         )
         return next_state
 
+    # gets next x position
     def x(self, dt, x=None, v=None, theta=None, **kwargs):
         x_dot = v * cos(theta)
         return x + x_dot * dt
 
+    # gets next y position
     def y(self, dt, y=None, v=None, theta=None, V=None, **kwargs):
         y_dot = v * sin(theta) - self.beta * V
         return y + y_dot * dt
 
+    # gets next heading theta
     def theta(self, dt, theta, omega, **kwargs):
         theta_dot = omega
         return theta + theta_dot * dt
 
+    # gets next tangential velocity v
     def v(self, dt, s_angle=None, s_force=None, r_angle=None, r_force=None, v=None, **kwargs):
         v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - self.fric_t * v**2) / self.m
         return v + v_dot * dt
 
+    # gets next rotational acceleration omega
     def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
-        omega_dot = (s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega * v) / self.J
+        omega_dot = (s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
         return omega + omega_dot * dt
 
     def time(self, dt, time=None, **kwargs):
@@ -136,24 +141,10 @@ class EulerSimulator(Simulator):
             'r_force': self.r_force(**prev_state, **env, **control)
         }
 
+    # gets the sail force
     def s_force(self, s_angle=None, V=None, theta=None, v=None, **kwargs):
         return self.s_lift * V * cos(theta + s_angle) - v * sin(s_angle)
 
+    # gets the ruder force
     def r_force(self, v=None, r_angle=None, **kwargs):
         return self.r_lift * v * sin(r_angle)
-
-
-    """def euler_f(self):
-        self.state.s_force=self.s_lift *( self.V*cos(self.state.theta+self.state.s_angle)-self.state.v*sin(self.state.s_angle))
-        self.state.r_force=self.r_lift * self.state.v * sin(self.state.r_angle)
-        x_dot = self.state.v * cos(self.state.theta)
-        y_dot = self.state.v * sin(self.state.theta) - self.beta * self.V
-        theta_dot = self.state.omega
-        v_dot = (self.state.s_force * sin(self.state.s_angle) - self.state.r_force * sin(self.state.r_angle) - self.fric_t * self.state.v) / self.m
-        omega_dot =(self.state.s_force * (self.L-self.r_s*cos(self.state.s_angle)) - self.state.r_force * self.r_r* cos(self.state.r_angle) - self.fric_a * self.state.omega) / self.J
-        self.state.x=self.state.x+x_dot*self.step_size
-        self.state.y=self.state.y+y_dot*self.step_size
-        self.state.v=self.state.v+v_dot*self.step_size
-        self.state.theta=self.state.theta+theta_dot*self.step_size
-        self.state.omega=self.state.omega+omega_dot*self.step_size
-        return 1"""

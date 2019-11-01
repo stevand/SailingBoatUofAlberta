@@ -21,18 +21,18 @@ def run_sim():
     start_state = get_start_state()
 
     esim = EulerSimulator(**sim_params) #constructs an euler simulator with the loaded params
-    simulator = SimulatorInterface(esim, 500, start_state) #construcs an interface that will return frames 500ms apart
+    simulator = SimulatorInterface(esim, 100, start_state) #construcs an interface that will return frames 100ms apart
 
     control = EulerSimulator.control(
         s_angle = 1,
-        r_angle = 0
+        r_angle = 0.5
     )
 
     env = EulerSimulator.env(
         V = 0.5
     )
 
-    for i in range(200):
+    for i in range(500):
         print('State num:', i)
         print(simulator.simulate(control, env))
     
@@ -43,7 +43,7 @@ def show(frames):
     fig = plot.setup(frames[0])
     plotcanvas = FigureCanvasTkAgg(fig, root)
     plotcanvas.get_tk_widget().grid(column=1, row=1)
-    ani = animation.FuncAnimation(fig, plot.updplot, frames=frames, interval=500, blit=False)
+    ani = animation.FuncAnimation(fig, plot.updplot, frames=frames, interval=50, blit=False)
     root.mainloop()
 
 if __name__ == "__main__":
