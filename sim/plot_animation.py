@@ -201,9 +201,7 @@ def transtwopi(x):
 #
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1)
-tk.Button(root, text='Quit', command=root.destroy).grid(column=0, row=0)
-tk.Button(root, text='Next', command=animate).grid(column=0, row=1)
-#ani = animation.FuncAnimation(fig, animate, interval=100, blit=False)
+ani = animation.FuncAnimation(fig, animate, interval=100, blit=False)
 root.mainloop()
 #
 #

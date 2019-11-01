@@ -14,6 +14,7 @@ class EulerSimulator(Simulator):
         v:          Speed of the boat
         s_angle:    Sail angle
         r_angle:    Rudder angle
+        time:       Current time in seconds
     
     The environment is a named tuple that contains:
         V:          Speed of true wind
@@ -30,7 +31,8 @@ class EulerSimulator(Simulator):
         'omega',
         'v',
         's_force',
-        'r_force'
+        'r_force',
+        'time'
     ])
 
     env = namedtuple('env', [
@@ -99,7 +101,8 @@ class EulerSimulator(Simulator):
             v = self.v(dt, **prev_state, **env, **control),
             omega = self.omega(dt, **prev_state, **env, **control),
             s_force = self.s_force(**prev_state, **env, **control),
-            r_force = self.r_force(**prev_state, **env, **control)
+            r_force = self.r_force(**prev_state, **env, **control),
+            time = self.time(dt, **prev_state, **env, **control)
         )
         return next_state
 
@@ -124,6 +127,9 @@ class EulerSimulator(Simulator):
         omega_dot = s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega / self.J
         return omega + omega_dot * dt
 
+    def time(self, dt, time=None, **kwargs):
+        return time + dt
+
     #intermediate link variables
     def link(self, prev_state, env, control):
         return {
@@ -136,6 +142,7 @@ class EulerSimulator(Simulator):
 
     def r_force(self, v=None, r_angle=None, **kwargs):
         return self.r_lift * v * sin(r_angle)
+
 
     """def euler_f(self):
         self.state.s_force=self.s_lift *( self.V*cos(self.state.theta+self.state.s_angle)-self.state.v*sin(self.state.s_angle))
