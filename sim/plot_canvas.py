@@ -11,7 +11,7 @@ def setup(frame):
     env = frame.env
 
     global ax1, ax2, ax3
-    fig=plt.figure(figsize=(15,5))
+    fig=plt.figure(figsize=(21,7))
     ax1 = plt.subplot(1, 3, 1)
     r=2.5
     theta=np.linspace(0.0,2.0*np.pi,100)
@@ -47,7 +47,6 @@ def setup(frame):
     ax1.fill(x,y,'b')
     ax1.fill(xbr,ybr,'tab:orange')
     ax1.plot(s_r_r[0]+state.x,s_r_r[1]+state.y,'k',r_r_r[0]+state.x,r_r_r[1]+state.y,'k')
-    #ax1.get_children()[2].set_xy(np.column_stack([xbr,ybr]))
 
     ax2 = plt.subplot(2, 3, 5,projection='polar')
     ax2.set_theta_direction(-1)
@@ -79,14 +78,11 @@ def setup(frame):
     ax4.title.set_position([0.5,-0.1])
     ax4.set_title('Wind Direction and Velocity')
     ax4.set_rlim([0,1])
-    #ax4.plot([(30+180)/360*np.pi*2,30/360*np.pi*2],[1,1])
     ax4.set_xticklabels(['N','NW','W','SW','S','SE','E','NE'])
     ax4.set_yticklabels([])
     ax4.set_frame_on('True')
-    #ax4.annotate("", xy=(0.5, 0.5), xytext=(0, 0),arrowprops=dict(arrowstyle="->"))
     ax4.arrow(-180/360*np.pi*2,env.V,180/360*np.pi*2,0,head_width=-0.075,shape='right')
     ax4.arrow(-180/360*np.pi*2,env.V,180/360*np.pi*2,0,head_width=0.075,shape='left')
-    #ax4.arrow((45+180)/360*np.pi*2,0.5,180/360*np.pi*2,0,head_width=1,shape='full')
     plt.subplots_adjust(wspace=0, hspace=0)
     return fig
     #
@@ -133,19 +129,6 @@ def updplot(frame):
     
     ax3.get_children()[0].set_xdata([0,ds])
     ax3.get_children()[0].set_ydata([0,1])
-
-
-#    #ax4.annotate("", xy=(0.5, 0.5), xytext=(0, 0),arrowprops=dict(arrowstyle="->"))    
-#    #ax4.arrow((45+180)/360*np.pi*2,0.5,180/360*np.pi*2,0,head_width=1,shape='full')
-#    plt.subplots_adjust(wspace=0, hspace=0)
-#    return fig
-#
-#
-#sim_time=1
-#simsteps = round(sim_time // dt)
-#
-def animate(frame):
-    updplot(frame.state, frame.control)
     
 def transtwopi(x):
     y=x-2*np.pi*np.floor(x/(2*np.pi))

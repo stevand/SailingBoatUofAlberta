@@ -37,7 +37,7 @@ env = EulerSimulator.env(
 )
 
 
-fig=plt.figure(figsize=(15,5))
+fig=plt.figure(figsize=(21,7))
 ax1 = plt.subplot(1, 3, 1)
 r=2.5
 theta=np.linspace(0.0,2.0*np.pi,100)

@@ -24,15 +24,15 @@ def run_sim():
     simulator = SimulatorInterface(esim, 500, start_state) #construcs an interface that will return frames 500ms apart
 
     control = EulerSimulator.control(
-        s_angle = 45,
-        r_angle = 45
+        s_angle = 1,
+        r_angle = 0
     )
 
     env = EulerSimulator.env(
         V = 0.5
     )
 
-    for i in range(20):
+    for i in range(200):
         print('State num:', i)
         print(simulator.simulate(control, env))
     

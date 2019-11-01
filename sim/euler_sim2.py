@@ -122,9 +122,8 @@ class EulerSimulator(Simulator):
         v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - self.fric_t * v**2) / self.m
         return v + v_dot * dt
 
-    #(self.state.s_force * (self.L-self.r_s*cos(self.state.s_angle)) - self.state.r_force * self.r_r* cos(self.state.r_angle) - self.fric_a * self.state.omega) / self.J
-    def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, **kwargs):
-        omega_dot = s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega / self.J
+    def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
+        omega_dot = (s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega * v) / self.J
         return omega + omega_dot * dt
 
     def time(self, dt, time=None, **kwargs):

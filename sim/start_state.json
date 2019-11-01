@@ -2,9 +2,9 @@
     "s_force": 0,
     "r_force": 0,
     "omega": 0,
-    "theta": 90,
+    "theta": 3.14,
     "v": 0,
-    "x": 0.5,
-    "y": 2,
+    "x": -1,
+    "y": 1,
     "time": 0
 }
