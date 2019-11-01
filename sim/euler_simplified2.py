@@ -58,23 +58,25 @@ class EulerSimulator(Simulator):
         self.m = m
         self.J = J
 
-    def simulate(self, prev_state, interval):
+    def simulate(self, interval):
+        self.euler_f()
+        """
         fullsteps = round(interval // self.step_size)
         state = prev_state
 
         for _ in range(fullsteps):
             state = self.euler_f(state)
 
-        return state
+        return state"""
 
-    def euler_f(self, prev_state):
+    def euler_f(self):
         self.state.s_force=self.s_lift *( self.V*cos(self.state.theta+self.state.s_angle)-self.state.v*sin(self.state.s_angle))
         self.state.r_force=self.r_lift * self.state.v * sin(self.state.r_angle)
         x_dot = self.state.v * cos(self.state.theta)
         y_dot = self.state.v * sin(self.state.theta) - self.beta * self.V
         theta_dot = self.state.omega
         v_dot = (self.state.s_force * sin(self.state.s_angle) - self.state.r_force * sin(self.state.r_angle) - self.fric_t * self.state.v) / self.m
-        omega_dot =(self.state.s_force * (self.l-self.r_s*cos(self.state.s_angle)) - self.state.r_force * self.r_r* cos(self.state.r_angle) - self.fric_a * self.state.omega) / self.J
+        omega_dot =(self.state.s_force * (self.L-self.r_s*cos(self.state.s_angle)) - self.state.r_force * self.r_r* cos(self.state.r_angle) - self.fric_a * self.state.omega) / self.J
         self.state.x=self.state.x+x_dot*self.step_size
         self.state.y=self.state.y+y_dot*self.step_size
         self.state.v=self.state.v+v_dot*self.step_size

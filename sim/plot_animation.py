@@ -11,37 +11,33 @@ import tkinter as tk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
 import euler_simplified2 as e1
+from euler_sim2 import EulerSimulator
 import json
 
 with open('sim_params.json', mode='r') as param_file:
     sim_params = json.load(param_file)
+
+with open('start_state.json', mode='r') as start_state_file:
+    start_state = EulerSimulator.state(**json.load(start_state_file))
+
 print(sim_params)
+print(start_state)
 
-dt=0.0025
-sim_time=0.5
-simsteps = round(sim_time // dt)
-Sim1=e1.EulerSimulator(**sim_params)
-"""Sim1.V=1
-Sim1.beta=0.5
-Sim1.fric_a=0.05
-Sim1.fric_t=0.5
-Sim1.J=0.01
-Sim1.l=1
-Sim1.m=1
-Sim1.r_lift=0.1
-Sim1.r_r=1
-Sim1.r_s=1
-Sim1.s_lift=0.2"""
-Sim1.state.omega=0
-Sim1.state.r_angle=30/360*np.pi*2
-Sim1.state.s_angle=-30/360*np.pi*2
-Sim1.state.theta=45/360*np.pi*2
-Sim1.state.v=0
-Sim1.state.x=-0.5
-Sim1.state.y=2
+dt=60
+Sim1 = EulerSimulator(**sim_params)
+simsteps = 100
 
-state=Sim1.state
-fig=plt.figure(figsize=(21,7))
+state=start_state
+control = EulerSimulator.control(
+    s_angle=0,
+    r_angle=0
+)
+env = EulerSimulator.env(
+    V = 1
+)
+
+
+fig=plt.figure(figsize=(15,5))
 ax1 = plt.subplot(1, 3, 1)
 r=2.5
 theta=np.linspace(0.0,2.0*np.pi,100)
@@ -54,12 +50,11 @@ xb=c+np.cos(theta)*a*(1-e**2)/(1+e*np.cos(theta))
 yb=np.sin(theta)*a*(1-e**2)/(1+e*np.cos(theta))
 s_pos=np.array([[0,-a*0.75],[0,0]])
 
-
-ds=state.s_angle
+ds=control.s_angle
 Rs=np.array([[np.cos(ds),-np.sin(ds)],[np.sin(ds) ,np.cos(ds)]])
 
 r_pos=np.array([[0,a/2],[0,0]])
-dr=-state.r_angle
+dr=-control.r_angle
 Rr=np.array([[np.cos(dr),-np.sin(dr)],[np.sin(dr) ,np.cos(dr)]])
 
 ra=state.theta
@@ -67,8 +62,8 @@ Rb=np.array([[np.cos(ra),-np.sin(ra)],[np.sin(ra) ,np.cos(ra)]])
 xbr=np.zeros((len(xb),1))
 ybr=np.zeros((len(xb),1))
 for i in range(len(xb)):
-    xbr[i][0]=Rb[0][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.x;
-    ybr[i]=Rb[1][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.y;
+    xbr[i][0]=Rb[0][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.x
+    ybr[i]=Rb[1][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.y
 s_r=Rs.dot(s_pos)+np.array([[a*0.75,a*0.75],[0,0]])
 s_r_r=Rb.dot(s_r)
 r_r=Rr.dot(r_pos)+np.array([[-a/2,-a/2],[0,0]])
@@ -79,7 +74,6 @@ ax1.fill(x,y,'b')
 ax1.fill(xbr,ybr,'tab:orange')
 ax1.plot(s_r_r[0]+state.x,s_r_r[1]+state.y,'k',r_r_r[0]+state.x,r_r_r[1]+state.y,'k')
 #ax1.get_children()[2].set_xy(np.column_stack([xbr,ybr]))
-
 
 ax2 = plt.subplot(2, 3, 5,projection='polar')
 ax2.set_theta_direction(-1)
@@ -106,7 +100,7 @@ ax3.set_rlim([0,1])
 ax3.plot([0,ds],[0,1])
 ax3.set_frame_on('True')
 
-ax4 = plt.subplot(1, 3, 3,projection='polar')
+"""ax4 = plt.subplot(1, 3, 3,projection='polar')
 ax4.set_theta_zero_location("N")
 
 ax4.title.set_position([0.5,-0.1])
@@ -117,13 +111,13 @@ ax4.set_xticklabels(['N','NW','W','SW','S','SE','E','NE'])
 ax4.set_yticklabels([])
 ax4.set_frame_on('True')
 #ax4.annotate("", xy=(0.5, 0.5), xytext=(0, 0),arrowprops=dict(arrowstyle="->"))
-ax4.arrow(-180/360*np.pi*2,Sim1.V,180/360*np.pi*2,0,head_width=-0.075,shape='right')
-ax4.arrow(-180/360*np.pi*2,Sim1.V,180/360*np.pi*2,0,head_width=0.075,shape='left')
-#ax4.arrow((45+180)/360*np.pi*2,0.5,180/360*np.pi*2,0,head_width=1,shape='full')
+ax4.arrow(-180/360*np.pi*2,env.V,180/360*np.pi*2,0,head_width=-0.075,shape='right')
+ax4.arrow(-180/360*np.pi*2,env.V,180/360*np.pi*2,0,head_width=0.075,shape='left')
+#ax4.arrow((45+180)/360*np.pi*2,0.5,180/360*np.pi*2,0,head_width=1,shape='full')"""
 plt.subplots_adjust(wspace=0, hspace=0)
 
 #
-def updplot(state):
+def updplot(state, control):
     theta=np.linspace(0.0,2.0*np.pi,100)
     c=0.1
     a=0.1
@@ -133,11 +127,11 @@ def updplot(state):
     s_pos=np.array([[0,-a*0.75],[0,0]])
     
     
-    ds=state.s_angle
+    ds=control.s_angle
     Rs=np.array([[np.cos(ds),-np.sin(ds)],[np.sin(ds) ,np.cos(ds)]])
     
     r_pos=np.array([[0,a/2],[0,0]])
-    dr=-state.r_angle
+    dr=-control.r_angle
     Rr=np.array([[np.cos(dr),-np.sin(dr)],[np.sin(dr) ,np.cos(dr)]])
     
     ra=state.theta
@@ -145,8 +139,8 @@ def updplot(state):
     xbr=np.zeros((len(xb),1))
     ybr=np.zeros((len(xb),1))
     for i in range(len(xb)):
-        xbr[i][0]=Rb[0][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.x;
-        ybr[i]=Rb[1][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.y;
+        xbr[i][0]=Rb[0][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.x
+        ybr[i]=Rb[1][0:2].dot(np.array([[xb[i]],[yb[i]]]))+state.y
     s_r=Rs.dot(s_pos)+np.array([[a*0.75,a*0.75],[0,0]])
     s_r_r=Rb.dot(s_r)
     r_r=Rr.dot(r_pos)+np.array([[-a/2,-a/2],[0,0]])
@@ -162,6 +156,7 @@ def updplot(state):
     
     ax3.get_children()[0].set_xdata([0,ds])
     ax3.get_children()[0].set_ydata([0,1])
+    print('updating plot')
 
 
 #    #ax4.annotate("", xy=(0.5, 0.5), xytext=(0, 0),arrowprops=dict(arrowstyle="->"))    
@@ -175,31 +170,40 @@ root= tk.Tk()
 #sim_time=1
 #simsteps = round(sim_time // dt)
 #
-def animate(i):
-    px=Sim1.state.x
-    py=Sim1.state.y
-    Sim1.state.s_angle=-90/360*np.pi*2*np.cos(i*dt*10)
-    Sim1.state.r_angle=45/360*np.pi*2*np.cos(i*dt*10)
+def animate(i = None):
+    global state
+    px=state.x
+    py=state.y
+    control = EulerSimulator.control(
+        s_angle=np.pi / 2,
+        r_angle=0
+    )
 #    Sim1.V=(1+np.sin(i*dt*10))/2
 #    ax4.get_children()[0].set_xy(np.column_stack([[-180/360*np.pi*2,180/360*np.pi*2],[np.sin(i*dt*10),0]]))
 #    ax4.get_children()[1].set_xy(np.column_stack([[-180/360*np.pi*2,180/360*np.pi*2],[Sim1.V,0]]))
-    Sim1.simulate(i*dt)
+    state = Sim1.simulate(state, env, control, 10000)
 #    temp=transtwopi(np.arctan(Sim1.state.y/Sim1.state.x))
 #    print(transtwopi(Sim1.state.theta))
 #    print(temp)
-    if (Sim1.state.x**2+Sim1.state.y**2>(r**2)*1.01):
-        Sim1.state.v=0
-        Sim1.state.x=px
-        Sim1.state.y=py
-    updplot(Sim1.state)
+    """if (state.x**2+state.y**2>(r**2)*1.01):
+        state = state._replace(
+            x=px,
+            y=py,
+            v=0,
+        )"""
+    print(state)
+    updplot(state, control)
     
 def transtwopi(x):
     y=x-2*np.pi*np.floor(x/(2*np.pi))
     return y
 
+#
 plotcanvas = FigureCanvasTkAgg(fig, root)
 plotcanvas.get_tk_widget().grid(column=1, row=1)
-ani = animation.FuncAnimation(fig, animate, interval=simsteps, blit=False)
+tk.Button(root, text='Quit', command=root.destroy).grid(column=0, row=0)
+tk.Button(root, text='Next', command=animate).grid(column=0, row=1)
+#ani = animation.FuncAnimation(fig, animate, interval=100, blit=False)
 root.mainloop()
 #
 #
