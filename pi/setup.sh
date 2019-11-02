@@ -9,15 +9,22 @@ sudo apt-get install python3-pip python3-dev
 # Install other useful stuff
 sudo apt-get install vim
 
-# Install xsens mti drivers
+# Install arduino
 cd ~
-git clone https://github.com/xsens/xsens_mt.git
-cd ~/xsens_mt
-make
-sudo modprobe usbserial
-cd ..
+wget http://downloads.arduino.cc/arduino-1.8.5-linuxarm.tar.xz
+tar -x -f arduino-1.8.5-linuxarm.tar.xz
+cd arduino-1.8.5
+sudo ./install.sh
 
-Install pyenv
+# Install xsens mti drivers
+#cd ~
+#git clone https://github.com/xsens/xsens_mt.git
+#cd ~/xsens_mt
+#make
+#sudo modprobe usbserial
+#cd ..
+
+# Install pyenv
 curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 
 # Update bashrc
