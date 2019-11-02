@@ -7,7 +7,7 @@ sudo apt-get update
 sudo apt-get install python3-pip python3-dev
 
 # Install other useful stuff
-sudo apt-get install arduino vim
+sudo apt-get install vim
 
 # Install xsens mti drivers
 cd ~
@@ -31,10 +31,5 @@ pyenv install 3.6.0
 pyenv exec python -V
 pyenv global 3.6.0
 
-# Create Virtual Env
-
 # Install python requirements
 pip install -r requirements.txt
-
-
-
