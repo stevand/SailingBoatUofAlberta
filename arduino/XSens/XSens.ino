@@ -4,7 +4,7 @@
 
 
 
-//Initializing XSens at ADDRESS 0X1D
+//Initializing XSens at ADDRESS 0X6B
 XSens xsens(0x6b);
 
 void setup() {
@@ -49,10 +49,13 @@ void loop() {
 //    Serial.print(" ");
 //  }
 //  Serial.println(" ");
-  
-  Serial.println("Outputting Yaw :");
-  Serial.println(xsens.getHeadingYaw());
+
+  Serial.print("Roll : ");
+  Serial.println(xsens.get_roll());
+  Serial.print("Pitch : ");
+  Serial.println(xsens.get_pitch());
+  Serial.print("Yaw : ");
+  Serial.println(xsens.get_yaw());
   Serial.println(" ");
-  Serial.println(" ");
-  delay(100);
+  delay(500);
 }

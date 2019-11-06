@@ -114,9 +114,12 @@ uint8_t* XBus::buildMessage(MesID MID, uint8_t* data, uint8_t length){
 }
 
 void XBus::quatToHeading(){
-  headingYaw = -atan2(2*quat[0]*quat[3]+quat[1]*quat[2], 1-2*(quat[2]*quat[2]+quat[3]*quat[3]))/M_PI*180.0;
-  if(headingYaw < 0)
-    headingYaw += 360.0;
+  // https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+  pitch = -atan2(2*(quat[0]*quat[1]+quat[2]*quat[3]), 1-2*(quat[1]*quat[1]+quat[2]*quat[2]))/M_PI*180.0;
+  yaw = -atan2(2*(quat[0]*quat[3]+quat[1]*quat[2]), 1-2*(quat[2]*quat[2]+quat[3]*quat[3]))/M_PI*180.0;
+    if (yaw<0)
+      yaw += 360;
+  roll = -asin(2*(quat[0]*quat[2] - quat[3]*quat[1]))/M_PI*180.0;
 }
 
 void XBus::read(){

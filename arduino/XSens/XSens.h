@@ -10,7 +10,9 @@ class XSens{
 		void begin();
 		void updateMeasures();
 		
-		float getHeadingYaw(){return xbus.headingYaw;}
+		float get_yaw(){return xbus.yaw;}
+    float get_roll(){return xbus.roll;}
+    float get_pitch(){return xbus.pitch;}
 		
 		float* getQuat(){return xbus.quat;}
 		float* getAccel(){return xbus.accel;}

@@ -27,7 +27,9 @@ class XBus{
 		
 		float quat[4];
 		float accel[3];
-		float headingYaw;
+		float yaw;
+    float pitch;
+    float roll;
 		float mag[3];
 		float rot[3];
 		
