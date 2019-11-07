@@ -64,7 +64,7 @@ def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_fr
     frame_delay_ms = frame_delay / 1000
     
     sim_interface.simulate(get_control(), get_env())
-    thread = threading.Thread(target=sim_thread, args=[sim_interface, get_control, get_env, frame_delay_ms], daemon=True)
+    thread = threading.Thread(target=sim_thread, args=[sim_interface, get_control, get_env, frame_delay_ms, num_frames], daemon=True)
     thread.start()
 
 def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, num_frames=100):
