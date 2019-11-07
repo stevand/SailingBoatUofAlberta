@@ -8,15 +8,28 @@ import tkinter as tk
 import threading
 from time import sleep
 
+DISPLAY_INTERVAL = 100 # time interval between subsequent frames are displayed 
+
 def get_params():
-    with open('sim_params.json', mode='r') as param_file:
+    with open('sim/sim_params.json', mode='r') as param_file:
         sim_params = json.load(param_file)
     return sim_params
 
 def get_start_state():
-    with open('start_state.json', mode='r') as start_state_file:
+    with open('sim/start_state.json', mode='r') as start_state_file:
         start_state = EulerSimulator.state(**json.load(start_state_file))
     return start_state
+
+def load_sim():
+    """Initializes and returns a simulator interface and simulator from saved params and start state."""
+    sim_params = get_params()
+    start_state = get_start_state()
+
+    esim = EulerSimulator(**sim_params) #constructs an euler simulator with the loaded params
+    sim_interface = SimulatorInterface(esim, 100, start_state) #constructs an interface that will return frames 500ms apart
+
+    return sim_interface, esim
+
 
 # Returns default (constant) control getter
 def default_control():
@@ -31,41 +44,70 @@ def default_env():
         V = 0.5
     )
 
+def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_frames=100):
+    """
+    Runs the simulator for the given number of frames and saves data to log.json.
 
-def run_sim(get_control=None, get_env=None):
-    sim_params = get_params()
-    start_state = get_start_state()
-
-    esim = EulerSimulator(**sim_params) #constructs an euler simulator with the loaded params
-    simulator = SimulatorInterface(esim, 500, start_state) #construcs an interface that will return frames 100ms apart
-
+    Parameters:
+        sim_interface (SimulatorInterface): The interface that will be used to display and simulate frames
+        get_control (() -> EulerSimulator.control): A callback that returns the control that will be used in the simulation. Default: default_control.
+        get_env (() -> EulerSimulator.env): A callback that returns the environment that will be used in the simulation. Default: default_env.
+        frame_delay (int): The time in ms to wait between frames. Default: 0.
+        num_frames (int): The number of frames that the simulator will be run for. Default: 100
+    """
     if get_control == None:
         get_control = default_control
 
     if get_env == None:
         get_env = default_env
+
+    frame_delay_ms = frame_delay / 1000
     
-    thread = threading.Thread(target=sim_thread, args=[simulator, get_control, get_env])
+    sim_interface.simulate(get_control(), get_env())
+    thread = threading.Thread(target=sim_thread, args=[sim_interface, get_control, get_env, frame_delay_ms], daemon=True)
     thread.start()
 
-    show(simulator.frame_generator())
+def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, num_frames=100):
+    """
+    Simultaneously runs and displays the frames of sim_interface, allowing for a real time view of the simulation. Data saved to log.json.
 
-def sim_thread(simulator, get_control, get_env, delay=0):
+    Parameters:
+        sim_interface (SimulatorInterface): The interface that will be used to display and simulate frames
+        speed_factor (float): How many times faster the simulator will run compared to real time. Default: 1.
+        get_control (() -> EulerSimulator.control): A callback that returns the control that will be used in the simulation. Default: default_control.
+        get_env (() -> EulerSimulator.env): A callback that returns the environment that will be used in the simulation. Default: default_env.
+    """
+    sim_interface.set_interval(DISPLAY_INTERVAL * speed_factor)
+    run_sim(sim_interface, get_control=get_control, get_env=get_env, frame_delay=DISPLAY_INTERVAL, num_frames=100)
+
+    display(sim_interface)
+
+
+def display(sim_interface):
+    """Displays all existing frames in the sim_interface. Does not generate any new frames. Used for replaying saved frames."""
+    show(sim_interface.frame_generator())
+
+# Thread that simulates new frames, sleeping for sleep_time between each one. 
+# Frames are saved to log.json at end.
+def sim_thread(sim_interface, get_control, get_env, sleep_time, num_frames):
     print('starting thread')
-    for i in range(100):
-        sleep(delay)
-        print(simulator.simulate(get_control(), get_env()))
+    for i in range(num_frames): 
+        print(sim_interface.simulate(get_control(), get_env()))
+        sleep(sleep_time)
     with open('log.json', 'w') as log:
-        log.writelines(simulator.export_frames())
+        log.writelines(sim_interface.export_frames())
 
-def show(frames):
+# Starts a tkinter window that displays the frames yielded by the frame_gen
+def show(frame_gen):
+    print('starting simulator')
     root= tk.Tk()
-    fig = plot.setup(next(frames))
+    fig = plot.setup(next(frame_gen))
     plotcanvas = FigureCanvasTkAgg(fig, root)
     plotcanvas.get_tk_widget().grid(column=1, row=1)
-    ani = animation.FuncAnimation(fig, plot.updplot, frames=frames, interval=100, blit=False)
+    ani = animation.FuncAnimation(fig, plot.updplot, frames=frame_gen, interval=DISPLAY_INTERVAL, blit=False)
     root.mainloop()
 
 if __name__ == "__main__":
-    run_sim()
+    sim_interface, esim = load_sim()
+    display_run(sim_interface)
     

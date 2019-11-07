@@ -11,6 +11,10 @@ class SimulatorInterface():
         self._sim = simulator
         self._interval = interval
 
+    def set_interval(self, interval):
+        """Sets the interval between frames to a new value"""
+        self._interval = interval
+
     def simulate(self, control, env):
         """Runs the simulator and returns the next frame"""
         if self._frames:
