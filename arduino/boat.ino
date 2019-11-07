@@ -1,9 +1,14 @@
 #include <Servo.h>
+#include "XSens.h"
+#include <Wire.h>
 
 //take care to properly connect components
 const int RUDDER_PIN = 3;
 const int SAIL_PIN = 4;
 const int WIND_DIRECTION_PIN = A0;
+
+//Initializing XSens at ADDRESS 0X6B
+XSens xsens(0x6b);
 
 Servo rudder;
 Servo sail;
@@ -12,8 +17,10 @@ void setup()
 {
 	Serial.setTimeout(50);
 	Serial.begin(9600);
-	while (!Serial)
-		;
+	while (!Serial);
+  Wire.begin();
+  //Wake up process
+  xsens.begin();
 	pinMode(WIND_DIRECTION_PIN, INPUT);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
@@ -77,6 +84,12 @@ void sendWindDirection()
 	Serial.println(direction);
 }
 
+void sendYaw()
+{
+  xsens.updateMeasures();
+  Serial.println(xsens.get_yaw());
+}
+
 /*
 first char determines the type of request
 
@@ -108,6 +121,9 @@ void handleInput(String input)
 		angle = parseInt(input, 1, input.length());
 		setSail(angle);
 		break;
+  case 'w':
+    sendYaw();
+    break;
 	default:
 		Serial.print("Invalid Command");
 	}
