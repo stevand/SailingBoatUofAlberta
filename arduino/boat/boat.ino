@@ -121,7 +121,7 @@ void handleInput(String input)
 		angle = parseInt(input, 1, input.length());
 		setSail(angle);
 		break;
-  case 'w':
+  case 'y':
     sendYaw();
     break;
 	default:
