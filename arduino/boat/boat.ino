@@ -8,8 +8,8 @@ const int RUDDER_PIN = 3;
 const int SAIL_PIN = 4;
 const int WIND_DIRECTION_PIN = A0;
 //anemometer pins
-const int RV_PIN = A0;
-const int TMP_PIN = A1;
+const int RV_PIN = A1;
+const int TMP_PIN = A2;
 
 //Initializing XSens at ADDRESS 0X6B
 XSens xsens(0x6b);
