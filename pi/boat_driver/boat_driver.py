@@ -28,7 +28,6 @@ class BoatDriver(AbstractBoatDriver):
     def close(self):
         self._ser.close()
         print('closed serial port')
-        self._imu.close()
         print('closed imu')
 
     def get_heading(self):
