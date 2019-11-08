@@ -5,5 +5,4 @@ class Anemometer {
         Anemometer(int rvPin, int tmpPin);
 
         float getWindspeed();
-
-}
+};
