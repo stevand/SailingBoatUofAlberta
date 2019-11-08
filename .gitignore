@@ -8,3 +8,4 @@ arduino/output
 pi/testing.py
 experimentation
 build
+log.json

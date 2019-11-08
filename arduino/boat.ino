@@ -1,12 +1,16 @@
 #include <Servo.h>
+#include "Anemometer.h"
 
 //take care to properly connect components
 const int RUDDER_PIN = 3;
 const int SAIL_PIN = 4;
 const int WIND_DIRECTION_PIN = A0;
+const int RV_PIN = A0;
+const int TMP_PIN = A1;
 
 Servo rudder;
 Servo sail;
+Anemometer anemometer(RV_PIN, TMP_PIN);
 
 void setup()
 {
