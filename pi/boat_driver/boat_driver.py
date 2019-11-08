@@ -42,6 +42,10 @@ class BoatDriver(AbstractBoatDriver):
         resp = self._send('d')
         return float(resp)
 
+    def get_wind_speed(self):
+        resp = self._send('w')
+        return resp
+
     def set_rudder(self, angle):
         # maps angle from (-45, 45) to (0, 90)
         super().set_rudder(angle)

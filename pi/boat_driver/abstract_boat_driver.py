@@ -31,6 +31,11 @@ class AbstractBoatDriver(abc.ABC):
         pass
 
     @abc.abstractmethod
+    def get_wind_speed(self):
+        """Returns the apparent wind speed, as measured from the boat"""
+        pass
+
+    @abc.abstractmethod
     def set_sail(self, angle):
         """Tightens/loosens the sheets so that the sails may reach the given angle (0-90) away from the center."""
         if angle < 0 or angle > 90:
