@@ -1,12 +1,22 @@
 #include <Servo.h>
+#include "Anemometer.h"
+#include "XSens.h"
+#include <Wire.h>
 
 //take care to properly connect components
 const int RUDDER_PIN = 3;
 const int SAIL_PIN = 4;
 const int WIND_DIRECTION_PIN = A0;
+//anemometer pins
+const int RV_PIN = A1;
+const int TMP_PIN = A2;
+
+//Initializing XSens at ADDRESS 0X6B
+XSens xsens(0x6b);
 
 Servo rudder;
 Servo sail;
+Anemometer anemometer(RV_PIN, TMP_PIN);
 
 void setup()
 {
@@ -14,6 +24,9 @@ void setup()
 	Serial.begin(9600);
 	while (!Serial)
 		;
+	Wire.begin();
+	//Wake up process
+	xsens.begin();
 	pinMode(WIND_DIRECTION_PIN, INPUT);
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
@@ -67,14 +80,20 @@ void sendPosition()
 
 void sendWindspeed()
 {
-	Serial.println(0.0);
+	Serial.println(anemometer.getWindspeed());
 }
 
 void sendWindDirection()
 {
 	//input comes in [0, 706], mapping it to [0, 360]
-	int direction = map(analogRead(WIND_DIRECTION_PIN), 0, 706, 0, 360); 
+	int direction = map(analogRead(WIND_DIRECTION_PIN), 0, 706, 0, 360);
 	Serial.println(direction);
+}
+
+void sendYaw()
+{
+	xsens.updateMeasures();
+	Serial.println(xsens.get_yaw());
 }
 
 /*
@@ -85,6 +104,7 @@ sxxx: set sail angle to xxx degrees
 p: return position
 w: return windspeed
 d: return wind direction
+y: return yaw (heading)
 */
 void handleInput(String input)
 {
@@ -107,6 +127,9 @@ void handleInput(String input)
 	case 's':
 		angle = parseInt(input, 1, input.length());
 		setSail(angle);
+		break;
+	case 'y':
+		sendYaw();
 		break;
 	default:
 		Serial.print("Invalid Command");
