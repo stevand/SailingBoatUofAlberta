@@ -1,19 +1,21 @@
 from .abstract_boat_driver import AbstractBoatDriver
+from math import pi
 
 class BoatDriver(AbstractBoatDriver):
     # get_frame is a callback that returns the most recent frame
     def __init__(self, get_frame=None, **kwargs):
         super().__init__(**kwargs)
         self.get_frame = get_frame
+        self.set_sail(90)
 
     def get_wind_dir(self):
         return 0 # simulator currently can only have wind coming from due north
 
     def get_heading(self):
-        return self.get_frame().state.theta
+        return self.get_frame().state.theta / pi * 180
 
     def get_position(self):
-        return (self.get_frame().state.x, self.get_frame().state.y)
+        return self.get_frame().state.x, self.get_frame().state.y
 
     def close(self):
         pass

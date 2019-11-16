@@ -2,6 +2,7 @@ from .simulator import Simulator
 from collections import namedtuple
 from math import cos, sin
 
+
 class EulerSimulator(Simulator):
     """Simulator that works by finding numerical approximations for the differential equations outlined 
     in "Sailboat Model" through a naive approach with Euler's method.
@@ -39,12 +40,13 @@ class EulerSimulator(Simulator):
         'V',
     ])
 
-    control = namedtuple('control',[
+    control = namedtuple('control', [
         's_angle',
         'r_angle'
     ])
 
-    def __init__(self, step_size, beta=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, r_s=None, r_r=None, L=None, m=None, J=None):
+    def __init__(self, step_size, beta=None, fric_t=None, fric_a=None, s_lift=None, r_lift=None, r_s=None, r_r=None,
+                 L=None, m=None, J=None):
         """Initialize the simulator with the following parameters:
         step_size:          Time step size (in ms) when using Euler's method
         beta:               Drift coefficient
@@ -75,34 +77,34 @@ class EulerSimulator(Simulator):
 
         state = prev_state
 
-        #Simulates all full steps
+        # Simulates all full steps
         for _ in range(fullsteps):
-            dt = self.step_size / 1000 #convert ms to seconds
+            dt = self.step_size / 1000  # convert ms to seconds
             state = self.next_state(state, env, control, dt)
 
-        #Simulates remainder (if the interval is not multiple of step_size)
+        # Simulates remainder (if the interval is not multiple of step_size)
         if interval % self.step_size > 0:
             dt = (interval % self.step_size) / 1000
-            state = self.next_state(state, env, control, dt) 
+            state = self.next_state(state, env, control, dt)
 
-        return state        
+        return state
 
     def next_state(self, prev_state, env, control, dt):
-        #if not isinstance(prev_state, self.state):
+        # if not isinstance(prev_state, self.state):
         #    raise Exception('prev_state must be of type given by self.state')
 
         prev_state = prev_state._asdict()
         env = env._asdict()
         control = control._asdict()
         next_state = self.state(
-            x = self.x(dt, **prev_state, **env, **control),
-            y = self.y(dt, **prev_state, **env, **control),
-            theta = self.theta(dt, **prev_state, **env, **control),
-            v = self.v(dt, **prev_state, **env, **control),
-            omega = self.omega(dt, **prev_state, **env, **control),
-            s_force = self.s_force(**prev_state, **env, **control),
-            r_force = self.r_force(**prev_state, **env, **control),
-            time = self.time(dt, **prev_state, **env, **control)
+            x=self.x(dt, **prev_state, **env, **control),
+            y=self.y(dt, **prev_state, **env, **control),
+            theta=self.theta(dt, **prev_state, **env, **control),
+            v=self.v(dt, **prev_state, **env, **control),
+            omega=self.omega(dt, **prev_state, **env, **control),
+            s_force=self.s_force(**prev_state, **env, **control),
+            r_force=self.r_force(**prev_state, **env, **control),
+            time=self.time(dt, **prev_state, **env, **control)
         )
         return next_state
 
@@ -123,18 +125,19 @@ class EulerSimulator(Simulator):
 
     # gets next tangential velocity v
     def v(self, dt, s_angle=None, s_force=None, r_angle=None, r_force=None, v=None, **kwargs):
-        v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - self.fric_t * v**2) / self.m
+        v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - self.fric_t * v ** 2) / self.m
         return v + v_dot * dt
 
     # gets next rotational acceleration omega
     def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
-        omega_dot = (s_force * (self.L-self.r_s*cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
+        omega_dot = (s_force * (self.L - self.r_s * cos(s_angle)) - r_force * self.r_r * cos(
+            r_angle) - self.fric_a * omega) / self.J
         return omega + omega_dot * dt
 
     def time(self, dt, time=None, **kwargs):
         return time + dt
 
-    #intermediate link variables
+    # intermediate link variables
     def link(self, prev_state, env, control):
         return {
             's_force': self.s_force(**prev_state, **env, **control),
