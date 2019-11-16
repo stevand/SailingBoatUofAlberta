@@ -1,5 +1,5 @@
 import json
-from frame import Frame
+from . frame import Frame
 
 class SimulatorInterface():
     """A class that facilitates the stateful encapsulation of a simulator. It enables easy backwards/forwards traversal and importing/exporting of a simulation."""
@@ -30,6 +30,12 @@ class SimulatorInterface():
     def frames(self):
         """Returns a list of all frames in sequential order. Pinky promise not to change anything"""
         return self._frames
+
+    def current_frame(self):
+        """Returns the current frame"""
+        if self._frames:
+            return self._frames[-1]
+        return self._start_state
 
     def frame_generator(self):
         """Returns a generator that yields all frames in sequential order"""

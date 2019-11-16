@@ -1,5 +1,4 @@
-from control import rudder_controller, sail_controller
-from threading import Lock
+from . import rudder_controller, sail_controller
 
 
 class Helmsman:

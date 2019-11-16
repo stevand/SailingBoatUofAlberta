@@ -1,4 +1,4 @@
-from simulator import Simulator
+from .simulator import Simulator
 from collections import namedtuple
 from math import cos, sin
 

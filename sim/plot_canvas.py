@@ -4,9 +4,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import tkinter as tk
-from euler_sim2 import EulerSimulator
-import json
 
 def setup(frame):
     env = frame.env

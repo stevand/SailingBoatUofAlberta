@@ -1,11 +1,12 @@
-from euler_sim2 import EulerSimulator
-from sim_interface import SimulatorInterface
+from sim.euler_sim2 import EulerSimulator
+from sim.sim_interface import SimulatorInterface
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.animation as animation
-import plot_canvas as plot
+import sim.plot_canvas as plot
 import json
 import tkinter as tk
 import threading
+from math import pi
 from time import sleep
 
 DISPLAY_INTERVAL = 100 # time interval between subsequent frames are displayed 
@@ -30,7 +31,23 @@ def load_sim():
 
     return sim_interface, esim
 
+def make_control_getter(driver):
+    """Generates a get_control function from the given boat driver that returns the current control as a named tuple that can be used by the simulator"""
+    def get_control():
+        return EulerSimulator.control(
+            s_angle = driver.get_sail() / 180 * pi,
+            r_angle = driver.get_rudder() / 180 * pi
+        )
+    return get_control
 
+def make_env_getter(driver):
+    """Generates a get_env function from the given boat driver that returns the current environment as a named tuple that can be used by the simulator"""
+    def get_env():
+        return EulerSimulator.env(
+            V = driver.get_wind_speed()
+        )
+    return get_env
+    
 # Returns default (constant) control getter
 def default_control():
     return EulerSimulator.control(
