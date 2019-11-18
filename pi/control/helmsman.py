@@ -65,6 +65,7 @@ class Helmsman:
         return {
             'tolerance': self.tolerance,
             'desired_heading': self.desired_heading,
+            'maximize_speed': self.maximize_speed,
             'rudder_controller': {
                 'enabled': self.rudder_controller_enabled
             },
