@@ -30,8 +30,7 @@ def load_sim():
     start_state = get_start_state()
 
     esim = EulerSimulator(**sim_params)  # constructs an euler simulator with the loaded params
-    sim_interface = SimulatorInterface(esim, 100,
-                                       start_state)  # constructs an interface that will return frames 500ms apart
+    sim_interface = SimulatorInterface(esim, 100, start_state)  # constructs an interface that will return frames 500ms apart
 
     return sim_interface, esim
 
@@ -75,7 +74,7 @@ def default_env():
     )
 
 
-def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_frames=200):
+def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_frames=200, verbose=False, log_file=None):
     """
     Runs the simulator for the given number of frames and saves data to log.json.
 
@@ -95,12 +94,13 @@ def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_fr
     frame_delay_ms = frame_delay / 1000
 
     sim_interface.simulate(get_control(), get_env())
-    thread = threading.Thread(target=sim_thread, args=[sim_interface, get_control, get_env, frame_delay_ms, num_frames],
+    thread = threading.Thread(target=sim_thread, args=[sim_interface, get_control, get_env, frame_delay_ms, num_frames, verbose, log_file],
                               daemon=True)
     thread.start()
 
 
-def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, num_frames=200):
+
+def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, num_frames=200, verbose=False, log_file=None):
     """
     Simultaneously runs and displays the frames of sim_interface, allowing for a real time view of the simulation. Data saved to log.json.
 
@@ -112,10 +112,9 @@ def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, n
     """
     sim_interface.set_interval(DISPLAY_INTERVAL * speed_factor)
     run_sim(sim_interface, get_control=get_control, get_env=get_env, frame_delay=DISPLAY_INTERVAL,
-            num_frames=num_frames)
-
+            num_frames=num_frames, verbose=False, log_file=log_file)
+    
     display(sim_interface)
-
 
 def display(sim_interface):
     """Displays all existing frames in the sim_interface. Does not generate any new frames. Used for replaying saved
@@ -125,14 +124,17 @@ def display(sim_interface):
 
 # Thread that simulates new frames, sleeping for sleep_time between each one.
 # Frames are saved to log.json at end.
-def sim_thread(sim_interface, get_control, get_env, sleep_time, num_frames):
+def sim_thread(sim_interface, get_control, get_env, sleep_time, num_frames, verbose, log_file):
     print('starting thread')
     for i in range(num_frames):
-        print(sim_interface.simulate(get_control(), get_env()))
-        #sim_interface.simulate(get_control(), get_env())
+        sim_interface.simulate(get_control(), get_env())
+        if verbose:
+            print(sim_interface.current_frame())
         sleep(sleep_time)
-    with open('log.json', 'w') as log:
-        log.writelines(sim_interface.export_frames())
+    if log_file:
+        print('saving data to ', log_file)
+        with open(log_file, 'w') as log:
+            log.writelines(sim_interface.export_frames())
 
 
 # Starts a tkinter window that displays the frames yielded by the frame_gen

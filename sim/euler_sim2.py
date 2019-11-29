@@ -1,6 +1,6 @@
 from .simulator import Simulator
 from collections import namedtuple
-from math import cos, sin
+from math import cos, sin, pi
 
 
 class EulerSimulator(Simulator):
@@ -121,7 +121,7 @@ class EulerSimulator(Simulator):
     # gets next heading theta
     def theta(self, dt, theta, omega, **kwargs):
         theta_dot = omega
-        return theta + theta_dot * dt
+        return (theta + theta_dot * dt) % pi
 
     # gets next tangential velocity v
     def v(self, dt, s_angle=None, s_force=None, r_angle=None, r_force=None, v=None, **kwargs):
@@ -130,8 +130,7 @@ class EulerSimulator(Simulator):
 
     # gets next rotational acceleration omega
     def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
-        omega_dot = (s_force * (self.L - self.r_s * cos(s_angle)) - r_force * self.r_r * cos(
-            r_angle) - self.fric_a * omega) / self.J
+        omega_dot = (s_force * (self.L - self.r_s * cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
         return omega + omega_dot * dt
 
     def time(self, dt, time=None, **kwargs):

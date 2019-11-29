@@ -1,5 +1,6 @@
 import json
 from . frame import Frame
+from .euler_sim2 import EulerSimulator
 
 class SimulatorInterface():
     """A class that facilitates the stateful encapsulation of a simulator. It enables easy backwards/forwards traversal and importing/exporting of a simulation."""
@@ -50,9 +51,15 @@ class SimulatorInterface():
         """Returns a serialized (JSON) string representing the internal list of frames"""
         return json.dumps([frame.tojson() for frame in self.frames()])
 
-    def import_frames(self, frames):
-        """Imports a serialized (JSON) string representing a list of frames, and goes to the beginning of it"""
-        self._frames = json.loads(frames)
+    def import_frame(self, frame_data):
+        """Imports and appends the frame represented by a serialized (JSON) string"""
+        self._frames.append(Frame.fromjson(frame_data, EulerSimulator))
+
+    def import_frames(self, data):
+        """Imports a list of frames from a string containing a serialized (JSON) representation of frame history."""
+        frames = json.loads(data)
+        for frame in frames:
+            self.import_frame(frame)
 
 
     

@@ -12,7 +12,7 @@ class BoatDriver(AbstractBoatDriver):
         return 0 # simulator currently can only have wind coming from due north
 
     def get_heading(self):
-        return self.get_frame().state.theta / pi * 180
+        return self.get_frame().state.theta / pi * 180 + 90
 
     def get_position(self):
         return self.get_frame().state.x, self.get_frame().state.y

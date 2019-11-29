@@ -24,10 +24,19 @@ class Frame():
         return json.dumps(
             {
                 "state": self._state._asdict(),
-                "control": self._state._asdict(),
-                "env": self._state._asdict()
+                "control": self._control._asdict(),
+                "env": self._env._asdict()
             }
         )
+
+    @staticmethod
+    def fromjson(data, Simulator):
+        data = json.loads(data)
+        state = Simulator.state(**(data['state']))
+        control = Simulator.control(**(data['control']))
+        env = Simulator.env(**data['env'])
+        return Frame(state, control, env)
+
 
     def __str__(self):
         return "state: {}\n control: {}\n env: {}".format(self._state, self._control, self._env)

@@ -3,7 +3,7 @@ from time import sleep
 import threading
 
 
-def start(driver, get_desired_heading, is_enabled, interval=2, p=0.1, i=0.01, d=0):
+def start(driver, get_desired_heading, is_enabled, interval=2, p=5, i=0.01, d=0):
     """
     Starts a PID in a seperate thread that attempts to always reach a desired heading. The thread will close if the program exits.
 
@@ -32,6 +32,7 @@ def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
         if is_enabled():
             try:
                 output = pid(shortest_path(get_desired_heading(), driver.get_heading()))
+                #print('setting rudder to', output)
                 driver.set_rudder(output)
             except Exception:
                 print('rudder_controller could not read from driver')

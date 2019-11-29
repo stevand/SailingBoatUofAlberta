@@ -26,8 +26,8 @@
         }
     },
     "simulation":{
-        "display": true,
-        "run": false,
+        "display": false,
+        "run": true,
         "log_file": "sim/log.json",
         "verbose": false
     }

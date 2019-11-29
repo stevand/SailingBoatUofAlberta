@@ -4,6 +4,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from time import clock
 
 def setup(frame):
     env = frame.env
@@ -89,7 +90,7 @@ def setup(frame):
 def updplot(frame):
     state = frame.state
     control = frame.control
-
+    #print(clock())
     #Creates the boat curves
     theta=np.linspace(0.0,2.0*np.pi,100)
     c=0.1
