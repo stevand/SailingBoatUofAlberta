@@ -2,7 +2,7 @@ import threading
 from time import sleep
 
 
-def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=1):
+def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=0.1):
     """Starts a sail controller on a seperate thread that attempts to maximize or minimize speed. The thread will close if the program exits."""
     control_thread = threading.Thread(target=sail_controller, daemon=True, args=(
         driver, is_enabled, go_fast, interval))

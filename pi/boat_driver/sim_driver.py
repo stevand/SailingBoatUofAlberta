@@ -6,13 +6,12 @@ class BoatDriver(AbstractBoatDriver):
     def __init__(self, get_frame=None, **kwargs):
         super().__init__(**kwargs)
         self.get_frame = get_frame
-        self.set_sail(90)
 
     def get_wind_dir(self):
-        return 0 # simulator currently can only have wind coming from due north
+        return (360 - self.get_heading()) % 360 # simulator currently can only have wind coming from due north
 
     def get_heading(self):
-        return self.get_frame().state.theta / pi * 180 + 90
+        return (self.get_frame().state.theta / pi * 180 + 90) % 360
 
     def get_position(self):
         return self.get_frame().state.x, self.get_frame().state.y
@@ -34,6 +33,7 @@ class BoatDriver(AbstractBoatDriver):
         return {
             'wind_dir': self.get_wind_dir(),
             'rel_wind_dir': self.get_wind_dir_rel(),
+            'true_wind_dir': self.get_wind_dir_true(),
             'heading': self.get_heading(),
             'position': self.get_position(),
             'sail': self.get_sail(),

@@ -8,6 +8,7 @@ import tkinter as tk
 import threading
 from math import pi
 from time import sleep
+from .frame import Frame
 
 DISPLAY_INTERVAL = 100  # time interval between subsequent frames are displayed
 
@@ -20,7 +21,7 @@ def get_params():
 
 def get_start_state():
     with open('sim/start_state.json', mode='r') as start_state_file:
-        start_state = EulerSimulator.state(**json.load(start_state_file))
+        start_state = Frame.fromjson(''.join(start_state_file.readlines()), EulerSimulator)
     return start_state
 
 
@@ -39,8 +40,11 @@ def make_control_getter(driver):
     """Generates a get_control function from the given boat driver that returns the current control as a named tuple that can be used by the simulator"""
 
     def get_control():
+        sail_dir = driver.get_sail()
+        if driver.get_wind_dir_rel() < 0: # makes sure sail is pointing in opposite direction to wind
+            sail_dir = -1 * sail_dir
         return EulerSimulator.control(
-            s_angle=driver.get_sail() / 180 * pi,
+            s_angle=sail_dir / 180 * pi,
             r_angle=driver.get_rudder() / 180 * pi
         )
 
@@ -109,17 +113,20 @@ def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, n
         speed_factor (float): How many times faster the simulator will run compared to real time. Default: 1.
         get_control (() -> EulerSimulator.control): A callback that returns the control that will be used in the simulation. Default: default_control.
         get_env (() -> EulerSimulator.env): A callback that returns the environment that will be used in the simulation. Default: default_env.
+    
+    Returns:
+        root: The root of the tkinter window that has been created
     """
     sim_interface.set_interval(DISPLAY_INTERVAL * speed_factor)
     run_sim(sim_interface, get_control=get_control, get_env=get_env, frame_delay=DISPLAY_INTERVAL,
-            num_frames=num_frames, verbose=False, log_file=log_file)
+            num_frames=num_frames, verbose=verbose, log_file=log_file)
     
-    display(sim_interface)
+    return display(sim_interface)
 
 def display(sim_interface):
     """Displays all existing frames in the sim_interface. Does not generate any new frames. Used for replaying saved
     frames. """
-    show(sim_interface.frame_generator())
+    return show(sim_interface.frame_generator())
 
 
 # Thread that simulates new frames, sleeping for sleep_time between each one.
@@ -145,7 +152,8 @@ def show(frame_gen):
     plotcanvas = FigureCanvasTkAgg(fig, root)
     plotcanvas.get_tk_widget().grid(column=1, row=1)
     ani = animation.FuncAnimation(fig, plot.updplot, frames=frame_gen, interval=DISPLAY_INTERVAL, blit=False)
-    root.mainloop()
+    #root.mainloop()
+    return root
 
 
 if __name__ == "__main__":

@@ -5,9 +5,9 @@ from .euler_sim2 import EulerSimulator
 class SimulatorInterface():
     """A class that facilitates the stateful encapsulation of a simulator. It enables easy backwards/forwards traversal and importing/exporting of a simulation."""
 
-    def __init__(self, simulator, interval, start_state):
+    def __init__(self, simulator, interval, start_frame):
         """Initializes the interface with the given simulator and time interval between frames (in ms)"""
-        self._start_state = start_state
+        self._start_frame = start_frame
         self._frames = []
         self._sim = simulator
         self._interval = interval
@@ -21,7 +21,7 @@ class SimulatorInterface():
         if self._frames:
             prev_state = self._frames[-1].state
         else:
-            prev_state = self._start_state
+            prev_state = self._start_frame.state
             
         next_state = self._sim.simulate(prev_state, control, env, self._interval)
         new_frame = Frame(next_state, control, env)
@@ -36,7 +36,7 @@ class SimulatorInterface():
         """Returns the current frame"""
         if self._frames:
             return self._frames[-1]
-        return self._start_state
+        return self._start_frame
 
     def frame_generator(self):
         """Returns a generator that yields all frames in sequential order"""

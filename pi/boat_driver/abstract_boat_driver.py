@@ -17,12 +17,12 @@ class AbstractBoatDriver(abc.ABC):
 
     @abc.abstractmethod
     def get_wind_dir(self):
-        """Returns the direction of the wind [0, 359], with 0 being North, 90 East and 180 being South"""
+        """Returns the relative direction of the wind [0, 359], with 0/359 pointing straight ahead and 180 pointing straight behind"""
         pass
 
     @abc.abstractmethod
     def get_heading(self):
-        """Returns the heading of the boat [0, 359], with 0 being North, 90 East and 180 being South"""
+        """Returns the heading of the boat [0, 359], with 0 being North, 90 West and 180 being South"""
         pass
 
     @abc.abstractmethod

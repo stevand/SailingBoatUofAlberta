@@ -121,7 +121,7 @@ class EulerSimulator(Simulator):
     # gets next heading theta
     def theta(self, dt, theta, omega, **kwargs):
         theta_dot = omega
-        return (theta + theta_dot * dt) % pi
+        return (theta + theta_dot * dt) % (2*pi) # theta stays within [0, 2pi]
 
     # gets next tangential velocity v
     def v(self, dt, s_angle=None, s_force=None, r_angle=None, r_force=None, v=None, **kwargs):
