@@ -2,7 +2,7 @@ import threading
 from time import sleep
 
 
-def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=3):
+def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=0.1):
     """Starts a sail controller on a seperate thread that attempts to maximize or minimize speed. The thread will close if the program exits."""
     control_thread = threading.Thread(target=sail_controller, daemon=True, args=(
         driver, is_enabled, go_fast, interval))
@@ -19,12 +19,16 @@ def sail_controller(driver, is_enabled, go_fast, interval):
                     minimize_speed(driver)
             except Exception:
                 print('Disabling sail_controller as it could not read from driver.')
-                break
+                # break
         sleep(interval)
 
 
 def maximize_speed(driver):
+    #print('Reading wind direction as ', driver.get_wind_dir())
+    #print('Relative wind ', driver.get_wind_dir_rel())
+    #print('setting sail to ', min(abs(driver.get_wind_dir_rel()), 90))
     driver.set_sail(min(abs(driver.get_wind_dir_rel()), 90))
+    # driver.set_sail(90)
 
 
 def minimize_speed(driver):

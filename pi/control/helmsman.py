@@ -1,5 +1,4 @@
-from control import rudder_controller, sail_controller
-from threading import Lock
+from . import rudder_controller, sail_controller
 
 
 class Helmsman:
@@ -9,7 +8,7 @@ class Helmsman:
         self.tolerance = 30
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
-        self.desired_heading = 180
+        self.desired_heading = 90
 
         # Starts rudder controller
         self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']

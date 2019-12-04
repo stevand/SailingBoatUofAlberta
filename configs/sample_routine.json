@@ -1,0 +1,30 @@
+{
+    "routines": [
+        "sample_routine"
+    ],
+    "driver": {
+        "type": "test_driver",
+        "kwargs": {
+            "verbose": false
+        }
+    },
+    "helmsman": {
+        "kwargs": {
+            "rudder_controller": {
+                "enabled": false,
+                "type": "pid",
+                "interval": 2
+            },
+            "sail_controller": {
+                "enabled": false,
+                "interval": 3
+            }
+        }
+    },
+    "server":{
+        "host": "0.0.0.0",
+        "kwargs":{
+
+        }
+    }
+}
