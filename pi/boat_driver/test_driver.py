@@ -20,6 +20,10 @@ class BoatDriver(AbstractBoatDriver):
         print('queried for wind_dir:')
         return 130
 
+    def get_wind_speed(self):
+        super().get_wind_speed()
+        return 2
+
     def set_rudder(self, angle):
         super().set_rudder(angle)
         print('rudder set to:', angle)

@@ -1,5 +1,4 @@
 import serial
-from imu.IMU import IMU
 from .abstract_boat_driver import AbstractBoatDriver
 from time import perf_counter
 from threading import Lock
@@ -10,7 +9,6 @@ lock = Lock()
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
         self._ser = serial.Serial(kwargs['arduino_port'], 9600, timeout=15)  # initial timeout set to 15 seconds
-        self._imu = IMU()
 
         # wait for Arduino to initialize
         print('Connecting to Arduino')
@@ -30,11 +28,11 @@ class BoatDriver(AbstractBoatDriver):
     def close(self):
         self._ser.close()
         print('closed serial port')
-        self._imu.close()
         print('closed imu')
 
     def get_heading(self):
-        return self._imu.heading()
+        resp = self._send('y')
+        return float(resp)
 
     def get_position(self):
         return tuple(float(coord) for coord in self._send('p').split(','))
@@ -42,6 +40,10 @@ class BoatDriver(AbstractBoatDriver):
     def get_wind_dir(self):
         resp = self._send('d')
         return float(resp)
+
+    def get_wind_speed(self):
+        resp = self._send('w')
+        return resp
 
     def set_rudder(self, angle):
         # maps angle from (-45, 45) to (0, 90)
