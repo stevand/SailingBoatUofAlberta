@@ -56,3 +56,5 @@ for routine in routines:
 # blocks until all routines are finished
 while not all((is_done() for is_done in routines_done)):
     block()
+
+locator.close_resources()

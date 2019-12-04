@@ -26,7 +26,7 @@ def exec(locator): # all routines take the locator in as a parameter
     driver = locator.get_driver()
     driver.get_sail()
 
-    # If the routine takes some time, try to run it on a seperate thread.
+    # If the routine is non-blocking and takes some time, it should run on a seperate thread.
     # Keep track of whether or not the routine has finished.
     done = False
     def run():
@@ -43,7 +43,7 @@ def exec(locator): # all routines take the locator in as a parameter
     # In that case, be aware that your routine will block and keyboard interrupts may not work.
 
     # Whether or not the process is blocking should be returned
-    blocking = True
+    blocking = False
 
     # Function that returns true only when the routine is complete
     def is_done():

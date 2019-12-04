@@ -101,3 +101,11 @@ def get_simulator():
 
     sim_interface, simulator = sim_runner.load_sim()
     return simulator
+
+def close_resources():
+    """
+    Closes any resources that may have been opened (such as the boat driver).
+    Should be called at program end.
+    """
+    if driver:
+        driver.close()
