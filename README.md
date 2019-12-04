@@ -10,7 +10,7 @@ There are a few dependencies for this project, but they are not strictly necessa
 ## Running
 The main point of entry for our program is through `manager.py`, which should be run from the project's top level directory. You can run it with the command `python manager.py <path_to_config_file>`. Our configuration files are stored in the configs directory. 
 
-To run the flask server using a test driver, run `python manager.py configs/server.json`. To use a driver for the real ASV, open the config file and change the "type" under "driver" from "test_driver" to "boat_driver". A web interface is available with [Remote-Boat](https://github.com/Yash-Bhandari/Remote-Boat). 
+To run the flask server using a test driver, run `python manager.py configs/server_test.json`. To use a driver for the real ASV, open the config file and change the "type" under "driver" from "test_driver" to "boat_driver", or use the config file "configs/server_real.json". A web interface is available with [Remote-Boat](https://github.com/Yash-Bhandari/Remote-Boat). 
 
 ## Configs and Routines
 Config files are used to specify:

@@ -1,11 +1,12 @@
 {
+    "description": "Starts up the server using the actual driver",
     "routines": [
         "run_server"
     ],
     "driver": {
-        "type": "test_driver",
+        "type": "boat_driver",
         "kwargs": {
-            "verbose": false
+            "arduino_port": "COM9"
         }
     },
     "helmsman": {
