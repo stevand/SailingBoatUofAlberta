@@ -7,7 +7,12 @@ import routines.run_server as run_server
 config_path = sys.argv[1]
 locator.load_config(config_path)
 
-routines = locator.get_config()['routines']
+# if routines are specified in commandline, routines listed in config will be ignored
+if len(sys.argv) > 2:
+    routines = sys.argv[2:]
+else:
+    routines = locator.get_config()['routines']
+
 # stores functions that check if non-blocking routines are done
 routines_done = [] 
 # stores clean up functions for non-blocking routines
