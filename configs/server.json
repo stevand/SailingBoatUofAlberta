@@ -1,9 +1,11 @@
 {
-    "goal": "simulate",
+    "goals": [
+        "run_server"
+    ],
     "driver": {
-        "type": "sim_driver",
+        "type": "test_driver",
         "kwargs": {
-            "arduino_port": "COM4"
+            "verbose": false
         }
     },
     "helmsman": {
@@ -14,7 +16,7 @@
                 "interval": 2
             },
             "sail_controller": {
-                "enabled": true,
+                "enabled": false,
                 "interval": 3
             }
         }
