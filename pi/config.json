@@ -1,20 +1,20 @@
 {
-    "goal": "run",
+    "goal": "debug",
     "driver": {
         "type": "boat_driver",
         "kwargs": {
-            "arduino_port": "COM4"
+            "arduino_port": "/dev/ttyACM0"
         }
     },
     "helmsman": {
         "kwargs": {
             "rudder_controller": {
-                "enabled": true,
+                "enabled": false,
                 "type": "pid",
                 "interval": 2
             },
             "sail_controller": {
-                "enabled": true,
+                "enabled": false,
                 "interval": 3
             }
         }

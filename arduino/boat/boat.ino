@@ -18,6 +18,8 @@ Servo rudder;
 Servo sail;
 Anemometer anemometer(RV_PIN, TMP_PIN);
 
+
+
 void setup()
 {
 	Serial.setTimeout(50);
@@ -35,14 +37,15 @@ void setup()
 
 void loop()
 {
-	handleInput(readInput());
+  String input = readInput();
+	if (input.length() > 0)
+    handleInput(input);
+  xsens.updateMeasures();
 }
 
 //blocking function
 String readInput()
 {
-	while (!Serial.available())
-		;
 	return Serial.readStringUntil('\n');
 }
 
@@ -92,7 +95,7 @@ void sendWindDirection()
 
 void sendYaw()
 {
-	xsens.updateMeasures();
+	
 	Serial.println(xsens.get_yaw());
 }
 
