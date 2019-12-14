@@ -43,6 +43,7 @@ void loop()
 		handleInput(commBuff.getCommand());
 	}
 	xsens.updateMeasures();
+	anemometer.update();
 }
 
 //blocking function
@@ -78,6 +79,7 @@ void setSail(int angle)
 	sail.write(adjusted);
 }
 
+// Stub
 void sendPosition()
 {
 	Serial.print(0.0);

@@ -1,17 +1,45 @@
 #include <Arduino.h>
 #include "Anemometer.h"
 
-float ZERO_WIND_ADJUSTMENT = 0;
+const float ZERO_WIND_ADJUSTMENT = 0;
+// minimum time between measurements (ms)
+const int MEASURE_DELAY = 50;
+// number of measurements to average
+const int NUM_MEASURES = 20;
 
-Anemometer::Anemometer(int rvPin, int tmpPin)
+/**
+ * Initializes the Anemometer that measures windspeed
+ * 
+ * @param rvPin the pin connected to the Anemometer's rv pin
+ * @param tmpPin the pin connected to the Anemometer's tmp pin
+*/
+Anemometer::Anemometer(int rvPin, int tmpPin) : rvPin(rvPin), tmpPin(tmpPin)
 {
-    this->rvPin = rvPin;
-    this->tmpPin = tmpPin;
     pinMode(rvPin, INPUT);
     pinMode(tmpPin, INPUT);
+    measurements = new float[NUM_MEASURES];
+    for (int i = 0; i < NUM_MEASURES; i++)
+    {
+        measurements[i] = 0;
+    }
 }
 
-float Anemometer::getWindspeed()
+// Updates the rolling average windspeed
+void Anemometer::update()
+{
+    if ((millis() - lastMeasurement) > MEASURE_DELAY)
+        {
+            total -= measurements[current];
+            measurements[current] = getCurrentWindspeed();
+            total += measurements[current];
+            current = (current + 1) % NUM_MEASURES;
+            avg = total / NUM_MEASURES;
+            lastMeasurement = millis();
+        }
+}
+
+// Returns the current windspeed, taken from a single measurement
+float Anemometer::getCurrentWindspeed()
 {
     int TMP_Therm_ADunits = analogRead(tmpPin);
     float RV_Wind_ADunits = analogRead(rvPin);
@@ -22,4 +50,10 @@ float Anemometer::getWindspeed()
     float zeroWind_volts = (zeroWind_ADunits * 0.0048828125) - ZERO_WIND_ADJUSTMENT;
     float WindSpeed_MPH = pow(((RV_Wind_Volts - zeroWind_volts) / .2300), 2.7265);
     return WindSpeed_MPH;
+}
+
+// Returns the rolling average of measurements taken over approximately the last second
+float Anemometer::getWindspeed()
+{
+    return avg;
 }
