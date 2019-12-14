@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include "Anemometer.h"
 #include "XSens.h"
+#include "commandbuffer.h"
 #include <Wire.h>
 
 //take care to properly connect components
@@ -17,8 +18,8 @@ XSens xsens(0x6b);
 Servo rudder;
 Servo sail;
 Anemometer anemometer(RV_PIN, TMP_PIN);
-
-
+//Commands are up to 5 characters long
+CommandBuffer commBuff(5);
 
 void setup()
 {
@@ -37,10 +38,11 @@ void setup()
 
 void loop()
 {
-  String input = readInput();
-	if (input.length() > 0)
-    handleInput(input);
-  xsens.updateMeasures();
+	commBuff.update();
+	if (commBuff.commandReady()) {
+		handleInput(commBuff.getCommand());
+	}
+	xsens.updateMeasures();
 }
 
 //blocking function
@@ -49,14 +51,16 @@ String readInput()
 	return Serial.readStringUntil('\n');
 }
 
-//parses int in the range [start, stop)
-int parseInt(String str, int start, int stop)
+//parses int from position start to the end of the string
+int parseInt(char* str, int start)
 {
 	int total = 0;
-	for (int i = start; i < stop; i++)
+	int i = start;
+	while(str[i] != '\0')
 	{
 		total *= 10;
-		total += str.charAt(i) - '0'; //converts ascii digit to int
+		total += str[i]- '0'; //converts ascii digit to int
+		i++;
 	}
 	return total;
 }
@@ -95,7 +99,6 @@ void sendWindDirection()
 
 void sendYaw()
 {
-	
 	Serial.println(xsens.get_yaw());
 }
 
@@ -109,10 +112,10 @@ w: return windspeed
 d: return wind direction
 y: return yaw (heading)
 */
-void handleInput(String input)
+void handleInput(char* input)
 {
 	int angle;
-	switch (input.charAt(0))
+	switch (input[0])
 	{
 	case 'p':
 		sendPosition();
@@ -124,17 +127,17 @@ void handleInput(String input)
 		sendWindDirection();
 		break;
 	case 'r':
-		angle = parseInt(input, 1, input.length());
+		angle = parseInt(input, 1);
 		setRudder(angle);
 		break;
 	case 's':
-		angle = parseInt(input, 1, input.length());
+		angle = parseInt(input, 1);
 		setSail(angle);
 		break;
 	case 'y':
 		sendYaw();
 		break;
 	default:
-		Serial.print("Invalid Command");
+		Serial.println("ERR");
 	}
 }
