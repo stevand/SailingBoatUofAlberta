@@ -37,10 +37,12 @@ def create_app(driver, helmsman=None):
     @app.route('/helmsman', methods=['PUT'])
     @cross_origin()
     def rudder_controller():
-        data = request.json
+        data = request.json['data']
         helmsman.rudder_controller_enabled = data['rudder_controller']['enabled']
         helmsman.sail_controller_enabled = data['sail_controller']['enabled']
-        return 'Rudder Controller is {}\n Sail Controller is {}'.format(helmsman.rudder_controller_enabled, helmsman.sail_controller_enabled)
+        helmsman.turn(int(data['desired_heading']))
+        helmsman.maximize_speed = data['maximize_speed']
+        return helmsman.status()
 
     @app.route('/shutdown', methods=['PUT'])
     @cross_origin()

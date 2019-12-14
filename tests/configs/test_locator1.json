@@ -1,9 +1,11 @@
 {
-    "goal": "debug",
+    "routines": [
+        "simulate"
+    ],
     "driver": {
-        "type": "boat_driver",
+        "type": "sim_driver",
         "kwargs": {
-            "arduino_port": "/dev/ttyACM0"
+            "arg": "val"
         }
     },
     "helmsman": {
@@ -14,7 +16,7 @@
                 "interval": 2
             },
             "sail_controller": {
-                "enabled": false,
+                "enabled": true,
                 "interval": 3
             }
         }
@@ -24,5 +26,11 @@
         "kwargs":{
 
         }
+    },
+    "simulation":{
+        "display": true,
+        "run": false,
+        "log_file": "sim/log.json",
+        "verbose": false
     }
 }
