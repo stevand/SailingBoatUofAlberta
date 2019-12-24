@@ -5,7 +5,8 @@ const float ZERO_WIND_ADJUSTMENT = 0;
 // minimum time between measurements (ms)
 const int MEASURE_DELAY = 50;
 // number of measurements to average
-const int NUM_MEASURES = 20;
+const int NUM_MEASURES = 100;
+// Total 5 second rolling average
 
 /**
  * Initializes the Anemometer that measures windspeed
@@ -49,6 +50,10 @@ float Anemometer::getCurrentWindspeed()
 
     float zeroWind_volts = (zeroWind_ADunits * 0.0048828125) - ZERO_WIND_ADJUSTMENT;
     float WindSpeed_MPH = pow(((RV_Wind_Volts - zeroWind_volts) / .2300), 2.7265);
+
+    //check if NAN
+    if (WindSpeed_MPH != WindSpeed_MPH)
+        return 0;
     return WindSpeed_MPH;
 }
 
