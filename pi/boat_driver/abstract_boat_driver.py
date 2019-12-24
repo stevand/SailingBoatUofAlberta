@@ -81,6 +81,7 @@ class AbstractBoatDriver(abc.ABC):
         """Returns the status of the boat"""
         return {
             'wind_dir': self.get_wind_dir(),
+            'wind_speed': self.get_wind_speed(),
             'rel_wind_dir': self.get_wind_dir_rel(),
             'heading': self.get_heading(),
             'position': self.get_position(),
