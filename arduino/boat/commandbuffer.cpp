@@ -37,7 +37,7 @@ void CommandBuffer::update()
         clearBuffer();
     }
 
-    if (Serial.available())
+    while (Serial.available() > 0 && !ready)
     {
         char in = Serial.read();
         if (in == '\n')
