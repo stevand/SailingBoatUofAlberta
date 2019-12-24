@@ -19,7 +19,7 @@ class BoatDriver(AbstractBoatDriver):
         print('Succesfully connected to Arduino')
         
         self._ser.timeout = 0.5  # set timeout to .5 seconds once initialization is over
-
+        self._ser.read_until() # clears anything in serial
         super().__init__(**kwargs)
 
         self._lastupdate = perf_counter()-1
@@ -62,6 +62,7 @@ class BoatDriver(AbstractBoatDriver):
             self._status = {
                 'wind_dir': self.get_wind_dir(),
                 'rel_wind_dir': self.get_wind_dir_rel(),
+                'wind_speed': self.get_wind_speed(),
                 'heading': self.get_heading(),
                 'position': self.get_position(),
                 'sail': self.get_sail(),
@@ -74,6 +75,9 @@ class BoatDriver(AbstractBoatDriver):
     # sends message to arduino
     def _send(self, cmd):
         with lock:
-            self._ser.write((cmd+'\n').encode('utf-8'))
+            resp = None
+            cmd = (cmd+'\n').encode('utf-8')
+            self._ser.write(cmd)
             resp = self._ser.read_until().decode('utf-8').strip()
+            #print('Send |{}| Received |{}|'.format(cmd, resp))
         return resp
