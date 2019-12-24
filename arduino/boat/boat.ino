@@ -34,12 +34,14 @@ void setup()
 	rudder.attach(RUDDER_PIN);
 	sail.attach(SAIL_PIN);
 	Serial.println("ready");
+	setSail(0);
 }
 
 void loop()
 {
 	commBuff.update();
-	if (commBuff.commandReady()) {
+	if (commBuff.commandReady())
+	{
 		handleInput(commBuff.getCommand());
 	}
 	xsens.updateMeasures();
@@ -53,14 +55,14 @@ String readInput()
 }
 
 //parses int from position start to the end of the string
-int parseInt(char* str, int start)
+int parseInt(char *str, int start)
 {
 	int total = 0;
 	int i = start;
-	while(str[i] != '\0')
+	while (str[i] != '\0')
 	{
 		total *= 10;
-		total += str[i]- '0'; //converts ascii digit to int
+		total += str[i] - '0'; //converts ascii digit to int
 		i++;
 	}
 	return total;
@@ -94,8 +96,8 @@ void sendWindspeed()
 
 void sendWindDirection()
 {
-	//input comes in [0, 706], mapping it to [0, 360]
-	int direction = map(analogRead(WIND_DIRECTION_PIN), 0, 706, 0, 360);
+	//input comes in [18, 662], mapping it to [0, 359]
+	int direction = map(analogRead(WIND_DIRECTION_PIN), 18, 662, 0, 359);
 	Serial.println(direction);
 }
 
@@ -114,7 +116,7 @@ w: return windspeed
 d: return wind direction
 y: return yaw (heading)
 */
-void handleInput(char* input)
+void handleInput(char *input)
 {
 	int angle;
 	switch (input[0])
