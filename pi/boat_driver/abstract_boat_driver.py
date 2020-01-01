@@ -44,7 +44,8 @@ class AbstractBoatDriver(abc.ABC):
 
     @abc.abstractmethod
     def set_rudder(self, angle):
-        """Sets the angle of the rudder
+        """Sets the angle of the rudder. 
+        Negative values will turn the boat left and positive values will turn the boat right.
         (0 -> -45] points the rudder the farther to the right
         (0 -> 45] points the rudder the farther to the left
         0 points it straight ahead."""
