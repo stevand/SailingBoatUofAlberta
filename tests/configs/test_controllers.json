@@ -1,0 +1,35 @@
+{
+    "description": "Used for testing rudder and sail controllers. Update intervals are set to very small values for rapid testing.",
+    "routines": [
+        "run_server"
+    ],
+    "driver": {
+        "type": "test_driver",
+        "kwargs": {
+            "verbose": false
+        }
+    },
+    "helmsman": {
+        "kwargs": {
+            "rudder_controller": {
+                "enabled": false,
+                "type": "pid",
+                "interval": 0.001
+            },
+            "sail_controller": {
+                "enabled": false,
+                "interval": 0.001
+            }
+        }
+    },
+    "server": {
+        "host": "0.0.0.0",
+        "kwargs": {}
+    },
+    "simulation": {
+        "display": true,
+        "run": false,
+        "log_file": "sim/log.json",
+        "verbose": false
+    }
+}
