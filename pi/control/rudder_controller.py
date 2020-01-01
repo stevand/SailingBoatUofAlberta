@@ -31,8 +31,7 @@ def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
     while True:
         if is_enabled():
             try:
-                output = pid(shortest_path(get_desired_heading(), driver.get_heading()))
-                #print('setting rudder to', output)
+                output = -1 * pid(shortest_path(get_desired_heading(), driver.get_heading()))
                 driver.set_rudder(output)
             except Exception:
                 print('rudder_controller could not read from driver')
