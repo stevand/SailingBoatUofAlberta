@@ -38,10 +38,26 @@ def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
                 print('rudder_controller could not read from driver')
         sleep(interval)
 
-#Returns the shortest distance to the desired angle from the current angle
-#Negative values imply counter clockwise rotation
+
 def shortest_path(desired, current):
-    if abs(current - desired) < abs(current - desired - 360):
-        return current - desired
+    """
+    Returns the shortest distance to the desired angle from the current angle
+
+    Parameters:
+        desired: Angle to reach [0,359]
+        current: Current angle [0, 359]
+
+    Returns:
+        The shortest distance in degrees between the two angles.
+        Negative values imply counter clockwise rotation
+    """
+    if desired >= current:
+        if desired - current <= 180:
+            return desired - current
+        else:
+            return -1 * (current + 360 - desired)
     else:
-        return current - desired - 360
+        if current - desired <= 180:
+            return desired - current
+        else:
+            return desired + 360 - current
