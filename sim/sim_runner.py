@@ -31,7 +31,7 @@ def load_sim():
     start_state = get_start_state()
 
     esim = EulerSimulator(**sim_params)  # constructs an euler simulator with the loaded params
-    sim_interface = SimulatorInterface(esim, 100, start_state)  # constructs an interface that will return frames 500ms apart
+    sim_interface = SimulatorInterface(esim, 500, start_state)  # constructs an interface that will return frames 500ms apart
 
     return sim_interface, esim
 

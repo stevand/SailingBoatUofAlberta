@@ -10,6 +10,7 @@ def setup(frame):
     env = frame.env
 
     global ax1, ax2, ax3
+    global fig
     fig=plt.figure(figsize=(27,9))
     ax1 = plt.subplot(1, 3, 1)
     # Size of the "water" (distance from the origin (0,0))
@@ -88,6 +89,7 @@ def setup(frame):
     #
 
 def updplot(frame):
+    fig.canvas.draw()
     state = frame.state
     control = frame.control
     #print(clock())
