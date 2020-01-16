@@ -3,6 +3,10 @@ import json
 from pi.control import Helmsman
 import sim.sim_runner as sim_runner
 from pi.server import flask_server
+from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.control.helmsman import Helmsman
+from sim.sim_interface import SimulatorInterface
+from sim.simulator import Simulator
 
 config = None
 # Singletons should be accessed through the corresponding getters
@@ -28,7 +32,7 @@ def get_config():
     """
     return config
     
-def get_driver():
+def get_driver() -> AbstractBoatDriver:
     """
     Returns the (singleton) instance of BoatDriver. 
     A new instance of the driver will be created only if one has not yet been instantiated.
@@ -47,7 +51,7 @@ def get_driver():
     driver = BoatDriver(**driver_config['kwargs'])
     return driver
 
-def get_helmsman():
+def get_helmsman() -> Helmsman:
     """
     Returns the (singleton) Helsman instance.
     A new instance of the helmsman will be created only if one has not yet been instantiated.
@@ -78,7 +82,7 @@ def get_server_runnable():
 
     return run
 
-def get_sim_interface():
+def get_sim_interface() -> SimulatorInterface:
     """
     Returns the (singleton) SimulatorInterface instance.
     """
@@ -90,7 +94,7 @@ def get_sim_interface():
     sim_interface, simulator = sim_runner.load_sim()
     return sim_interface
 
-def get_simulator():
+def get_simulator() -> Simulator:
     """
     Returns the (singleton) Simulator instance.
     """
