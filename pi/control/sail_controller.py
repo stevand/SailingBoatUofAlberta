@@ -27,7 +27,7 @@ def maximize_speed(driver):
     #print('Reading wind direction as ', driver.get_wind_dir())
     #print('Relative wind ', driver.get_wind_dir_rel())
     #print('setting sail to ', min(abs(driver.get_wind_dir_rel()), 75))
-    driver.set_sail(min(abs(driver.get_wind_dir_rel()), 75))
+    driver.set_sail(min(abs(driver.get_wind_dir_rel()) / 2, 90))
     # driver.set_sail(90)
 
 
