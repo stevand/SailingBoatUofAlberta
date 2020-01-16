@@ -6,7 +6,7 @@ from math import cos, sin, pi
 class EulerSimulator(Simulator):
     """Simulator that works by finding numerical approximations for the differential equations outlined 
     in "Sailboat Model" through a naive approach with Euler's method.
-    
+
     The state is a named tuple that contains the following properties:
         x:          Position of boat on east-west axis
         y:          Position of boat on north-south axis
@@ -16,10 +16,10 @@ class EulerSimulator(Simulator):
         s_angle:    Sail angle
         r_angle:    Rudder angle
         time:       Current time in seconds
-    
+
     The environment is a named tuple that contains:
         V:          Speed of true wind
-    
+
     The control is a named tuple that contains:
         s_force:    Force on sail
         r_force:    Force on rudder
@@ -121,16 +121,25 @@ class EulerSimulator(Simulator):
     # gets next heading theta
     def theta(self, dt, theta, omega, **kwargs):
         theta_dot = omega
-        return (theta + theta_dot * dt) % (2*pi) # theta stays within [0, 2pi]
+        return (theta + theta_dot * dt) % (2*pi)  # theta stays within [0, 2pi]
 
     # gets next tangential velocity v
     def v(self, dt, s_angle=None, s_force=None, r_angle=None, r_force=None, v=None, **kwargs):
-        v_dot = (s_force * sin(s_angle) - r_force * sin(r_angle) - self.fric_t * v ** 2) / self.m
+        v_dot = (s_force * sin(s_angle) - r_force *
+                 sin(r_angle) - self.fric_t * v ** 2) / self.m
         return v + v_dot * dt
 
     # gets next rotational acceleration omega
     def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
-        omega_dot = (s_force * (self.L - self.r_s * cos(s_angle)) - r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
+        omega_dot = (#s_force * (self.L - self.r_s * cos(s_angle)) -
+                     -1 * r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
+        """print('a: {} b: {} c: {} net {} cur: {}'.format(
+            round(s_force * (self.L - self.r_s * cos(s_angle)), 4),
+            round(-1 * r_force * self.r_r * cos(r_angle), 4),
+            round(-1 * self.fric_a * omega, 4),
+            round(omega_dot, 4),
+            round(omega, 4)
+        ))"""
         return omega + omega_dot * dt
 
     def time(self, dt, time=None, **kwargs):
