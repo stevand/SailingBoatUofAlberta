@@ -45,7 +45,7 @@ def make_control_getter(driver):
             sail_dir = -1 * sail_dir
         return EulerSimulator.control(
             s_angle=sail_dir / 180 * pi,
-            r_angle=driver.get_rudder() / 180 * pi *-1
+            r_angle=driver.get_rudder() / 180 * pi
             #r_angle=-30 / 180 * pi
         )
 
