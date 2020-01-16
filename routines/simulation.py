@@ -13,16 +13,24 @@ def exec(locator):
     plotcanvas = FigureCanvasTkAgg(fig, root)
     plotcanvas.get_tk_widget().grid(column=1, row=1)
 
-    get_control = sim_runner.default_control
-    get_env = sim_runner.default_env
+    #initializes driver, which gets it's data from the simulator
+    driver = locator.get_driver()
+    driver.get_frame = sim_interface.current_frame
+
+    #initializes the helmsman
+    locator.get_helmsman()
+
+    #creates getters for the env/control from the driver
+    get_control = sim_runner.make_control_getter(driver)
+    get_env = sim_runner.make_env_getter(driver)
 
     def progress():
         nonlocal root, sim_interface
         plot.updplot(sim_interface.simulate(get_control(), get_env()))
         print(sim_interface.current_frame())
-        root.after(2000, progress)
+        root.after(250, progress)
 
-    root.after(2000, progress)
+    root.after(250, progress)
     root.mainloop()
 
     blocking = True

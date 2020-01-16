@@ -31,7 +31,7 @@ def load_sim():
     start_state = get_start_state()
 
     esim = EulerSimulator(**sim_params)  # constructs an euler simulator with the loaded params
-    sim_interface = SimulatorInterface(esim, 500, start_state)  # constructs an interface that will return frames 500ms apart
+    sim_interface = SimulatorInterface(esim, 1000, start_state)  # constructs an interface that will return frames 1000ms apart
 
     return sim_interface, esim
 
@@ -41,11 +41,12 @@ def make_control_getter(driver):
 
     def get_control():
         sail_dir = driver.get_sail()
-        if driver.get_wind_dir_rel() < 0: # makes sure sail is pointing in opposite direction to wind
+        if driver.get_wind_dir_rel() > 0: # makes sure sail is pointing in opposite direction to wind
             sail_dir = -1 * sail_dir
         return EulerSimulator.control(
             s_angle=sail_dir / 180 * pi,
-            r_angle=driver.get_rudder() / 180 * pi
+            r_angle=driver.get_rudder() / 180 * pi *-1
+            #r_angle=-30 / 180 * pi
         )
 
     return get_control
@@ -66,7 +67,7 @@ def make_env_getter(driver):
 # Returns default (constant) control getter
 def default_control():
     return EulerSimulator.control(
-        s_angle=pi/2,
+        s_angle=0,
         r_angle=0
     )
 
