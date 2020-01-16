@@ -14,7 +14,7 @@ def setup(frame):
     fig=plt.figure(figsize=(27,9))
     ax1 = plt.subplot(1, 3, 1)
     # Size of the "water" (distance from the origin (0,0))
-    r=2.5
+    r=4
     
 #    Use this for a circular map
 #    theta=np.linspace(0.0,2.0*np.pi,100)
