@@ -1,12 +1,12 @@
 {
     "step_size": 50,
-    "beta": 0.001,
+    "beta": 0.005,
     "fric_a": 0.5,
-    "fric_t": 0.5,
+    "fric_t": 1,
     "J": 5,
     "L": 1,
     "m": 5,
-    "r_lift": 0.6,
+    "r_lift": 0.8,
     "r_r": 1,
     "r_s": 1,
     "s_lift": 0.2
