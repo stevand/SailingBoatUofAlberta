@@ -1,7 +1,7 @@
 {
     "step_size": 50,
     "beta": 0.001,
-    "fric_a": 0.05,
+    "fric_a": 0.5,
     "fric_t": 0.5,
     "J": 5,
     "L": 1,
