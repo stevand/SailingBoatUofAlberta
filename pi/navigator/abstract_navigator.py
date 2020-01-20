@@ -14,7 +14,7 @@ class AbstractNavigator(abc.ABC):
         self._driver = driver
         self._helmsman = helmsman
         self._waypoints = []
-        self._enabled = False
+        self._enabled = enabled
 
     def add_waypoint(self, waypoint, i=-1) -> int:
         """
@@ -31,7 +31,7 @@ class AbstractNavigator(abc.ABC):
             self._waypoints.insert(i, waypoint)
         return len(self._waypoints)
 
-    def del_waypoint(self, i) -> int:
+    def del_waypoint(self, i=0) -> int:
         """
         Deletes the i-th waypoint in the waypoint queue
         Args:

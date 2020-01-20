@@ -15,24 +15,27 @@ def angle_between(loc1, loc2):
     return (-1 * math.degrees(theta) + 90) % 360
 
 
-def navigate(interval, get_waypoint, driver, helmsman, is_enabled, waypoint_dist):
+def navigate(interval, get_waypoint, driver, helmsman, is_enabled, waypoint_dist, waypoint_reached):
     while True:
         if is_enabled():
             next_waypoint = get_waypoint()
             boat = driver.get_position()
             while next_waypoint and dist(boat, next_waypoint) < waypoint_dist:
+                waypoint_reached()
                 next_waypoint = get_waypoint()
 
             if next_waypoint:
                 helmsman.maximize_speed = True
-                helmsman.turn(angle_between(driver.get_position(), next_waypoint))
+                goto = angle_between(boat, next_waypoint)
+                helmsman.turn(goto)
+                #print(goto, helmsman.desired_heading)
             else:
                 helmsman.maximize_speed = False
         sleep(interval)
 
 
 class NaiveNavigator(AbstractNavigator):
-    def __init__(self, driver, helmsman, interval=0.5, waypoint_dist=0.4, **kwargs):
+    def __init__(self, driver, helmsman, interval=0.3, waypoint_dist=0.6, **kwargs):
         super().__init__(driver, helmsman=helmsman, **kwargs)
 
         # interval is time between updating helmsman direction
@@ -40,7 +43,8 @@ class NaiveNavigator(AbstractNavigator):
         # waypoint_dist is the distance at which the boat is considered to have reached the waypoint
         self.waypoint_dist = waypoint_dist
 
+
         thread = Thread(target=navigate, daemon=True,
-            args=[interval, self.get_waypoint, driver, helmsman, lambda: self._enabled, waypoint_dist])
+            args=[interval, self.get_waypoint, driver, helmsman, lambda: self._enabled, waypoint_dist, self.del_waypoint])
         thread.start()
 
