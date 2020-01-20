@@ -11,10 +11,11 @@ def setup(frame):
 
     global ax1, ax2, ax3
     global fig
-    fig=plt.figure(figsize=(27,9))
+    fig=plt.figure(figsize=(24,8))
     ax1 = plt.subplot(1, 3, 1)
+    fig.subplots_adjust(left=0.1,right=1,bottom=0.1,top=1)
     # Size of the "water" (distance from the origin (0,0))
-    r=4
+    r=3
     
 #    Use this for a circular map
 #    theta=np.linspace(0.0,2.0*np.pi,100)
