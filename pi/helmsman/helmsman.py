@@ -37,8 +37,8 @@ class Helmsman:
             diff = high - low
 
         # If new heading is in irons
-        if diff < self.tolerance:
-            return False
+        #if diff < self.tolerance:
+        #    return False
 
         # Else if new heading is valid
         self.desired_heading = new_heading
