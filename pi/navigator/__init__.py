@@ -1,1 +1,2 @@
 from .abstract_navigator import AbstractNavigator
+from .naive_navigator import NaiveNavigator
