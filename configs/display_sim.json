@@ -16,8 +16,13 @@
             },
             "sail_controller": {
                 "enabled": true,
-                "interval": 3
+                "interval": 0.2
             }
+        }
+    },
+    "navigator": {
+        "type": "NaiveNavigator",
+        "kwargs":{
         }
     },
     "server":{
