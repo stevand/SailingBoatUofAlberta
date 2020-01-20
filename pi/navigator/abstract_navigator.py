@@ -6,13 +6,15 @@ class AbstractNavigator(abc.ABC):
     Should be able to navigate to waypoints that are passed to it.
     """
 
-    def __init__(self, driver, helmsman=None, **kwargs):
+    @abc.abstractmethod
+    def __init__(self, driver, helmsman, enabled=True, **kwargs):
         """
         Initializes the navigator with the given driver and helmsman.
         """
         self._driver = driver
         self._helmsman = helmsman
         self._waypoints = []
+        self._enabled = False
 
     def add_waypoint(self, waypoint, i=-1) -> int:
         """
@@ -27,6 +29,7 @@ class AbstractNavigator(abc.ABC):
             self._waypoints.append(waypoint)
         else:
             self._waypoints.insert(i, waypoint)
+        return len(self._waypoints)
 
     def del_waypoint(self, i) -> int:
         """
@@ -37,6 +40,7 @@ class AbstractNavigator(abc.ABC):
             The new length of the waypoint queue
         """
         self._waypoints.pop(i)
+        return len(self._waypoints)
 
     def view_waypoints(self):
         """
@@ -44,3 +48,11 @@ class AbstractNavigator(abc.ABC):
         To edit the waypoint queue, use the add_waypoint and del_waypoint methods
         """
         return [waypoint for waypoint in self._waypoints]
+
+    def get_waypoint(self, i=0):
+        """
+        Returns the i-th waypoint, or the next waypoint if i is not specified
+        """
+        if self._waypoints:
+            return self._waypoints[i]
+        return None
