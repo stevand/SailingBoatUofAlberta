@@ -6,12 +6,14 @@ from pi.server import flask_server
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 from sim.sim_interface import SimulatorInterface
 from sim.simulator import Simulator
+from pi.navigator import AbstractNavigator
 
 config = None
 # Singletons should be accessed through the corresponding getters
 driver = None
 helmsman = None
 sim_interface = None
+navigator = None
 
 def load_config(config_path):
     """
@@ -104,6 +106,22 @@ def get_simulator() -> Simulator:
 
     sim_interface, simulator = sim_runner.load_sim()
     return simulator
+
+def get_navigator() -> AbstractNavigator:
+    """
+    Returns the (singleton) Navigator instance
+    """
+    global navigator, config
+
+    if navigator:
+        return navigator
+    
+    nav_config = config['navigator']
+    module = import_module('pi.navigator')
+    Navigator = getattr(module, nav_config['type'])
+    
+    navigator = Navigator(get_driver(), get_helmsman(), **nav_config['kwargs'])
+    return navigator
 
 def close_resources():
     """
