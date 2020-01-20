@@ -1,10 +1,9 @@
 from importlib import import_module
 import json
-from pi.control import Helmsman
+from pi.helmsman import Helmsman
 import sim.sim_runner as sim_runner
 from pi.server import flask_server
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
-from pi.control.helmsman import Helmsman
 from sim.sim_interface import SimulatorInterface
 from sim.simulator import Simulator
 

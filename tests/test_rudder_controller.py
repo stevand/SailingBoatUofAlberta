@@ -1,6 +1,6 @@
 import unittest
 import locator
-import pi.control.rudder_controller as rc
+import pi.helmsman.rudder_controller as rc
 from importlib import reload
 from time import sleep
 
