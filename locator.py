@@ -50,6 +50,8 @@ def get_driver() -> AbstractBoatDriver:
     BoatDriver = import_module('pi.boat_driver.'+driver_config['type']).BoatDriver
     # driver insta
     driver = BoatDriver(**driver_config['kwargs'])
+    if driver_config['type'] == 'sim_driver':
+        driver.get_frame = get_sim_interface().current_frame
     return driver
 
 def get_helmsman() -> Helmsman:

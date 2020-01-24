@@ -35,7 +35,7 @@ def navigate(interval, get_waypoint, driver, helmsman, is_enabled, waypoint_dist
 
 
 class NaiveNavigator(AbstractNavigator):
-    def __init__(self, driver, helmsman, interval=0.3, waypoint_dist=0.6, **kwargs):
+    def __init__(self, driver, helmsman, interval=0.3, waypoint_dist=0.4, **kwargs):
         super().__init__(driver, helmsman=helmsman, **kwargs)
 
         # interval is time between updating helmsman direction

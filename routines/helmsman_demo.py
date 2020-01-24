@@ -19,12 +19,9 @@ def exec(_):
 
     #initializes the helmsman
     helmsman = locator.get_helmsman()
-    #print(helmsman.turn(260))
-    navigator = locator.get_navigator()
-    navigator.add_waypoint((0, 2))
-    navigator.add_waypoint((2, 2))
-    navigator.add_waypoint((2, -2))
-    navigator.add_waypoint((-2, 1))
+    helmsman.rudder_controller_enabled = False
+    helmsman.sail_controller_enabled = False
+    driver.set_sail(0)
 
     #creates getters for the env/control from the driver
     get_control = sim_runner.make_control_getter(driver)
@@ -48,4 +45,3 @@ def exec(_):
         pass
 
     return blocking, is_done, cleanup
-    

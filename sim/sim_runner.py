@@ -25,13 +25,15 @@ def get_start_state():
     return start_state
 
 
-def load_sim():
+def load_sim(sim_params=None, start_state=None, frame_time=1000):
     """Initializes and returns a simulator interface and simulator from saved params and start state."""
-    sim_params = get_params()
-    start_state = get_start_state()
+    if not sim_params:
+        sim_params = get_params()
+    if not start_state:
+        start_state = get_start_state()
 
     esim = EulerSimulator(**sim_params)  # constructs an euler simulator with the loaded params
-    sim_interface = SimulatorInterface(esim, 1000, start_state)  # constructs an interface that will return frames 1000ms apart
+    sim_interface = SimulatorInterface(esim, frame_time, start_state)  # constructs an interface that will return frames frame_time ms apart
 
     return sim_interface, esim
 
