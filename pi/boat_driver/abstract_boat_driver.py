@@ -22,7 +22,7 @@ class AbstractBoatDriver(abc.ABC):
 
     @abc.abstractmethod
     def get_heading(self):
-        """Returns the heading of the boat [0, 359], with 0 being North, 90 West and 180 being South"""
+        """Returns the heading of the boat [0, 359], with 0 being East, 90 North and 180 being West"""
         pass
 
     @abc.abstractmethod

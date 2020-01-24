@@ -42,22 +42,22 @@ class TestRudderController(unittest.TestCase):
         self.assertEqual(rc.shortest_path(200, 10), -170,
                          'Shortest path to 200 from 10 degrees was not -170')
 
-    def test_tries_to_turn_right_100_20(self):
+    def test_tries_to_turn_left_100_20(self):
         def get_desired_heading():
             return 100
 
         self.driver.heading = 20
         rc.start(self.driver, get_desired_heading, is_enabled, interval=.001)
         sleep(0.003)
-        self.assertGreater(self.driver.get_rudder(), 0,
-                           'Boat did not try to turn right when the desired heading was 100 but the current heading was 20')
+        self.assertLess(self.driver.get_rudder(), 0,
+                           'Boat did not try to turn left when the desired heading was 100 but the current heading was 20')
 
-    def test_tries_to_turn_left_350_10(self):
+    def test_tries_to_turn_right_350_10(self):
         def get_desired_heading():
             return 350
 
         self.driver.heading = 10
         rc.start(self.driver, get_desired_heading, is_enabled, interval=.001)
         sleep(0.003)
-        self.assertLess(self.driver.get_rudder(), 0,
-                        'Boat did not try to turn left when the desired heading was 350 but the current heading was 10')
+        self.assertGreater(self.driver.get_rudder(), 0,
+                        'Boat did not try to turn right when the desired heading was 350 but the current heading was 10')
