@@ -5,8 +5,8 @@ const float ZERO_WIND_ADJUSTMENT = 0;
 // minimum time between measurements (ms)
 const int MEASURE_DELAY = 50;
 // number of measurements to average
-const int NUM_MEASURES = 100;
-// Total 5 second rolling average
+const int NUM_MEASURES = 50;
+// Total 2.5 second rolling average
 
 /**
  * Initializes the Anemometer that measures windspeed
@@ -31,7 +31,12 @@ void Anemometer::update()
     if ((millis() - lastMeasurement) > MEASURE_DELAY)
         {
             total -= measurements[current];
-            measurements[current] = getCurrentWindspeed();
+            
+            //dampens effect of rapid swings and neutralizes errenous sensor data
+            measurements[current] = min(getCurrentWindspeed(), avg + 5);
+
+            //measurements stored in circular array
+            //last measurement is removed, new one is added
             total += measurements[current];
             current = (current + 1) % NUM_MEASURES;
             avg = total / NUM_MEASURES;
@@ -59,6 +64,6 @@ float Anemometer::getCurrentWindspeed()
 
 // Returns the rolling average of measurements taken over approximately the last second
 float Anemometer::getWindspeed()
-{
+{   
     return avg;
 }
