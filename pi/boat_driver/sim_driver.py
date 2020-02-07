@@ -7,6 +7,9 @@ class BoatDriver(AbstractBoatDriver):
         super().__init__(**kwargs)
         self.get_frame = get_frame
 
+    def get_wind_dir_true(self):
+        return 90
+
     def get_wind_dir(self):
         return (self.get_heading() - 90) % 360 # simulator currently can only have wind coming from due north
 
