@@ -1,11 +1,8 @@
 from . import AbstractNavigator
 from threading import Thread
 from time import sleep
+from pi.navutils import dist
 import math
-
-def dist(loc1, loc2):
-    """Finds the distance between loc1 and loc2"""
-    return ((loc2[0]-loc1[0])**2 + (loc2[1]-loc1[1])**2)**0.5
 
 def angle_between(loc1, loc2):
     """Finds the angle to turn the boat at loc1 to reach loc2"""

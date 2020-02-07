@@ -21,7 +21,7 @@
         }
     },
     "navigator": {
-        "type": "NaiveNavigator",
+        "type": "PollNavigator",
         "kwargs":{
         }
     },

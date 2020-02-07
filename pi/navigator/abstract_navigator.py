@@ -7,7 +7,7 @@ class AbstractNavigator(abc.ABC):
     """
 
     @abc.abstractmethod
-    def __init__(self, driver, helmsman, enabled=True, **kwargs):
+    def __init__(self, driver, helmsman, enabled=True, waypoint_dist=0.4, **kwargs):
         """
         Initializes the navigator with the given driver and helmsman.
         """
@@ -15,6 +15,7 @@ class AbstractNavigator(abc.ABC):
         self._helmsman = helmsman
         self._waypoints = []
         self._enabled = enabled
+        self.waypoint_dist = waypoint_dist
 
     def add_waypoint(self, waypoint, i=-1) -> int:
         """
@@ -56,3 +57,11 @@ class AbstractNavigator(abc.ABC):
         if self._waypoints:
             return self._waypoints[i]
         return None
+    
+    @property
+    def enabled(self):
+        return self._enabled
+
+    @enabled.setter
+    def enabled(self, new_val):
+        self._enabled = new_val

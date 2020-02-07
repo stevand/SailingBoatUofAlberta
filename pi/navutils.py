@@ -48,3 +48,7 @@ def shortest_path(desired, current):
             return desired - current
         else:
             return desired + 360 - current
+
+def dist(loc1, loc2):
+    """Finds the distance between loc1 and loc2"""
+    return ((loc2[0]-loc1[0])**2 + (loc2[1]-loc1[1])**2)**0.5
