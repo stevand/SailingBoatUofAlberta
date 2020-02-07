@@ -1,0 +1,9 @@
+{
+    "description": "Minimal config file for testing voters",
+    "driver": {
+        "type": "test_driver",
+        "kwargs": {
+            "verbose": false
+        }
+    }
+}
