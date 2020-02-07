@@ -5,7 +5,6 @@
     "driver": {
         "type": "sim_driver",
         "kwargs": {
-            "arduino_port": "COM4"
         }
     },
     "helmsman": {

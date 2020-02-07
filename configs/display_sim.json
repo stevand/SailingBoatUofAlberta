@@ -1,6 +1,6 @@
 {
     "routines": [
-        "simulate"
+        "simulation"
     ],
     "driver": {
         "type": "sim_driver",
@@ -32,9 +32,6 @@
         }
     },
     "simulation":{
-        "display": true,
-        "run": false,
-        "log_file": "sim/log.json",
-        "verbose": false
+        "log_file": "sim/log.json"
     }
 }

@@ -28,10 +28,4 @@
 
         }
     },
-    "simulation":{
-        "display": true,
-        "run": false,
-        "log_file": "sim/log.json",
-        "verbose": false
-    }
 }
