@@ -1,5 +1,6 @@
 from simple_pid import PID
 from time import sleep
+from pi.navutils import shortest_path
 import threading
 
 
@@ -38,27 +39,3 @@ def rudder_controller(driver, pid, interval, get_desired_heading, is_enabled):
             except Exception:
                 print('rudder_controller could not read from driver')
         sleep(interval)
-
-
-def shortest_path(desired, current):
-    """
-    Returns the shortest distance to the desired angle from the current angle
-
-    Parameters:
-        desired: Angle to reach [0,359]
-        current: Current angle [0, 359]
-
-    Returns:
-        The shortest distance in degrees between the two angles.
-        Negative values imply counter clockwise rotation
-    """
-    if desired >= current:
-        if desired - current <= 180:
-            return desired - current
-        else:
-            return -1 * (current + 360 - desired)
-    else:
-        if current - desired <= 180:
-            return desired - current
-        else:
-            return desired + 360 - current
