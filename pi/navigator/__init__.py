@@ -1,2 +1,3 @@
 from .abstract_navigator import AbstractNavigator
 from .naive_navigator import NaiveNavigator
+from .poll_navigator.poll_navigator import PollNavigator

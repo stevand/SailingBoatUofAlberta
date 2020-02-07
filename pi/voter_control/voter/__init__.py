@@ -1,1 +1,0 @@
-from voter.WindVoter import WindVoter

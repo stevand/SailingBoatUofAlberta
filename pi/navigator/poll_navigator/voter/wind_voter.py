@@ -1,4 +1,4 @@
-from voter import Voter
+from . import Voter
 
 class WindVoter(Voter):
 
