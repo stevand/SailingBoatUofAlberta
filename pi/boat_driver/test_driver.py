@@ -1,14 +1,23 @@
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 
+
 class BoatDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
         self.verbose = kwargs['verbose']
         super().__init__(**kwargs)
         self.heading = 0
         self.position = (0, 0)
-        self.wind_dir = 130
-        self.wind_speed = 5
+        self.wind_dir = 0
+        self.wind_speed = 0
 
+    def reset(self):
+        """Sets all internal values to 0"""
+        self.heading = 0
+        self.position = (0, 0)
+        self.wind_dir = 0
+        self.wind_speed = 0
+        self.set_rudder(0)
+        self.set_sail(0)
 
     def close(self):
         pass
