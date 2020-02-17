@@ -11,6 +11,7 @@ def navigate(interval, nav, driver, helmsman):
             next_waypoint = nav.get_waypoint()
             boat = driver.get_position()
             while next_waypoint and dist(boat, next_waypoint) < nav.waypoint_dist:
+                print("next")
                 nav.del_waypoint()
                 next_waypoint = nav.get_waypoint()
 
@@ -18,9 +19,11 @@ def navigate(interval, nav, driver, helmsman):
                 helmsman.maximize_speed = True
                 goto = nav.poll()
                 helmsman.turn(goto)
-                #print(goto, helmsman.desired_heading)
+                print("Chosen heading:", goto)
+                # print(goto, helmsman.desired_heading)
             else:
-                helmsman.maximize_speed = False
+                print('minimizing speed')
+                helmsman.maximize_speed = False 
         sleep(interval)
 
 
@@ -34,7 +37,7 @@ class PollNavigator(AbstractNavigator):
         ]
         # constructs a dictionary that holds approval for each candidate heading
         self.headings = {2*i: 0 for i in range(num_headings)}
-
+        helmsman.maximize_speed = True
         thread = Thread(target=navigate, daemon=True,
                         args=[interval, self, driver, helmsman])
         thread.start()

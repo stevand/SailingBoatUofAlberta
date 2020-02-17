@@ -23,9 +23,6 @@ def exec(_):
     # print(helmsman.turn(260))
     navigator = locator.get_navigator()
     navigator.add_waypoint((0, 2))
-    navigator.add_waypoint((2, 2))
-    navigator.add_waypoint((2, -2))
-    navigator.add_waypoint((-2, 1))
 
     # creates getters for the env/control from the driver
     get_control = sim_runner.make_control_getter(driver)
@@ -34,7 +31,7 @@ def exec(_):
     def progress():
         nonlocal root, sim_interface
         plot.updplot(sim_interface.simulate(get_control(), get_env()))
-        print(sim_interface.current_frame())
+        sim_interface.current_frame()
         root.after(250, progress)
 
     root.after(250, progress)
