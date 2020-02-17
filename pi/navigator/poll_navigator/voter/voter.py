@@ -1,8 +1,10 @@
 import abc
+from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 
 class Voter(abc.ABC):
 
-    def __init__(self, driver):
+    def __init__(self, driver: AbstractBoatDriver, **kwargs):
+        """Initializes the Voter with the given driver"""
         self._driver = driver
 
     @abc.abstractmethod
