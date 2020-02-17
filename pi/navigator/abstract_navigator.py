@@ -7,7 +7,7 @@ class AbstractNavigator(abc.ABC):
     """
 
     @abc.abstractmethod
-    def __init__(self, driver, helmsman, enabled=True, waypoint_dist=0.4, **kwargs):
+    def __init__(self, driver, helmsman, enabled=True, waypoint_dist=0.2, **kwargs):
         """
         Initializes the navigator with the given driver and helmsman.
         """
