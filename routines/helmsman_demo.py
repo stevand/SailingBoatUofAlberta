@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sim.sim_runner as sim_runner
 
 def exec(_):
-    sim_interface = locator.get_sim_interface()
+    sim_interface = locator.get_sim_interface(frame_time = 250)
     assert isinstance(sim_interface, SimulatorInterface)
     root = tk.Tk()
     start_frame = sim_interface.current_frame()
@@ -22,6 +22,7 @@ def exec(_):
     helmsman.rudder_controller_enabled = False
     helmsman.sail_controller_enabled = False
     driver.set_sail(0)
+    helmsman.turn(0)
 
     #creates getters for the env/control from the driver
     get_control = sim_runner.make_control_getter(driver)
