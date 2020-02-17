@@ -85,7 +85,7 @@ def get_server_runnable():
 
     return run
 
-def get_sim_interface() -> SimulatorInterface:
+def get_sim_interface(**kwargs) -> SimulatorInterface:
     """
     Returns the (singleton) SimulatorInterface instance.
     """
@@ -94,7 +94,7 @@ def get_sim_interface() -> SimulatorInterface:
     if sim_interface:
         return sim_interface
 
-    sim_interface, simulator = sim_runner.load_sim()
+    sim_interface, simulator = sim_runner.load_sim(**kwargs)
     return sim_interface
 
 def get_simulator() -> Simulator:
