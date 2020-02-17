@@ -131,7 +131,7 @@ class EulerSimulator(Simulator):
 
     # gets next rotational acceleration omega
     def omega(self, dt, s_angle=None, s_force=None, r_force=None, r_angle=None, omega=None, v=None, **kwargs):
-        omega_dot = (#s_force * (self.L - self.r_s * cos(s_angle)) -
+        omega_dot = (s_force * (self.L - self.r_s * cos(s_angle)) +
                      -1 * r_force * self.r_r * cos(r_angle) - self.fric_a * omega) / self.J
         """print('a: {} b: {} c: {} net {} cur: {}'.format(
             round(s_force * (self.L - self.r_s * cos(s_angle)), 4),
