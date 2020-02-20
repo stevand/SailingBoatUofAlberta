@@ -14,9 +14,9 @@ To run the flask server using a test driver, run `python manager.py configs/serv
 
 ## Configs and Routines
 Config files are used to specify:
-*which routines should be run
-*how the service locator should construct instances of the driver, helmsman, simulator and more
-*miscellaneous information that can be used by routines
+* which routines should be run
+* how the service locator should construct instances of the driver, helmsman, simulator and more
+* miscellaneous information that can be used by routines
 
 Routines are executed in the order that they are listed. For more information about writing routines, see routines/sample_routine.py.
 
