@@ -8,17 +8,18 @@ There are a few dependencies for this project, but they are not strictly necessa
 
 
 ## Running
-The main point of entry for our program is through `manager.py`, which should be run from the project's top level directory. You can run it with the command `python manager.py <path_to_config_file>`. Our configuration files are stored in the configs directory. 
+The main point of entry for our program is through `manager.py`, which should be run from the project's top level directory. You can run it with the command `python manager.py <path_to_config_file> <optional_list_of_space_seperated_routines>`. Our configuration files are stored in the configs directory. 
 
 To run the flask server using a test driver, run `python manager.py configs/server_test.json`. To use a driver for the real ASV, use the config file `configs/server_real.json`. A web interface is available with [Remote-Boat](https://github.com/Yash-Bhandari/Remote-Boat). 
 
 ## Configs and Routines
 Config files are used to specify:
+
 * which routines should be run
 * how the service locator should construct instances of the driver, helmsman, simulator and more
 * miscellaneous information that can be used by routines
 
-Routines are executed in the order that they are listed. For more information about writing routines, see routines/sample_routine.py.
+Routines are executed in the order that they are listed. If routines are explicitly specified from the command line, they will supersede the routines in the config file. For more information about writing routines, see [routines/sample_routine.py](https://github.com/stevand/SailingBoatUofAlberta/blob/voter/routines/sample_routine.py).
 
 ## Locator
 `locator.py` is a service locator that can be used to access instances of the boat driver, helmsman, simulator, simulator interface or server. Some of these (like the boat driver) will be singletons. To use the service locator, `import locator` and then use it's getter methods. If your code is not being run through the manager, make sure to call `locator.load_configs(path_to_config_file)` once.
