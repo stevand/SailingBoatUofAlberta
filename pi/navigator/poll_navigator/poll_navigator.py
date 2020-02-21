@@ -7,31 +7,6 @@ from pi.navutils import dist
 from time import sleep
 
 
-def navigate(interval, nav, driver, helmsman):
-    while True:
-        if nav.enabled:
-            next_waypoint = nav.get_waypoint()
-            boat = driver.get_position()
-            while next_waypoint and dist(boat, next_waypoint) < nav.waypoint_dist:
-                nav.del_waypoint()
-                nav._prev = next_waypoint
-                next_waypoint = nav.get_waypoint()
-                print("going to:", next_waypoint)
-
-            if next_waypoint:
-                helmsman.maximize_speed = True
-                goto = nav.poll()
-                helmsman.turn(goto)
-                nav.curr_heading = goto
-                print("Chosen heading:", goto)
-                print(*nav.headings[goto])
-                # print(goto, helmsman.desired_heading)
-            else:
-                print('minimizing speed')
-                helmsman.maximize_speed = False
-        sleep(interval)
-
-
 class PollNavigator(AbstractNavigator):
     def __init__(self, driver: AbstractBoatDriver, helmsman: Helmsman, num_headings=180, **kwargs):
         super().__init__(driver, helmsman, **kwargs)
@@ -54,6 +29,7 @@ class PollNavigator(AbstractNavigator):
             print("minimizing speed")
             self._helmsman.maximize_speed = False
         else:
+            self._helmsman.maximize_speed = True
             best_heading = self.poll()
             print("Chosen heading:", best_heading)
             print(*self.headings[best_heading])
