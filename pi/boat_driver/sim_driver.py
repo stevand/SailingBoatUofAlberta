@@ -1,7 +1,7 @@
 from .abstract_boat_driver import AbstractBoatDriver
 from math import pi
 
-class BoatDriver(AbstractBoatDriver):
+class SimDriver(AbstractBoatDriver):
     # get_frame is a callback that returns the most recent frame
     def __init__(self, get_frame=None, **kwargs):
         super().__init__(**kwargs)

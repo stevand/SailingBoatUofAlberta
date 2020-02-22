@@ -4,7 +4,7 @@
         "run_server"
     ],
     "driver": {
-        "type": "boat_driver",
+        "type": "BoatDriver",
         "kwargs": {
             "arduino_port": "COM9"
         }

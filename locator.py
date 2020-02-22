@@ -76,11 +76,11 @@ def get_driver() -> AbstractBoatDriver:
 
     driver_config = config['driver']
     # imports the type of BoatDriver specified in config file
-    BoatDriver = import_module(
-        'pi.boat_driver.'+driver_config['type']).BoatDriver
-    # driver insta
-    driver = BoatDriver(**driver_config['kwargs'])
-    if driver_config['type'] == 'sim_driver':
+    module = import_module('pi.boat_driver')
+    DriverClass = getattr(module, driver_config['type'])
+    # driver instance
+    driver = DriverClass(**driver_config['kwargs'])
+    if driver_config['type'] == 'SimDriver':
         driver.get_frame = get_sim_interface().current_frame
     return driver
 
@@ -113,6 +113,7 @@ def get_rudder_controller(config=None) -> RudderController:
     """
     rudder_controller_config = config['helmsman']['rudder_controller']
     return RudderController.create(rudder_controller_config)
+
 
 def get_server_runnable():
     """

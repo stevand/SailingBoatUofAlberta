@@ -1,7 +1,6 @@
 import unittest
 from importlib import reload
-from pi.boat_driver.test_driver import BoatDriver as test_driver_class
-from pi.boat_driver.sim_driver import BoatDriver as sim_driver_class
+from pi.boat_driver import TestDriver, SimDriver
 from pi.helmsman import RudderController
 from sim.sim_interface import SimulatorInterface
 import json
@@ -29,7 +28,7 @@ class TestLocator(unittest.TestCase):
         self.assertEqual(locator.config['routines'], ['debug'])
         self.assertEqual(locator.config['driver'],
         {
-            'type': 'test_driver',
+            'type': 'TestDriver',
             'kwargs': {
                 'verbose': False
             }
@@ -45,7 +44,7 @@ class TestLocator(unittest.TestCase):
         self.assertEqual(locator.config['routines'], ['simulate'])
         self.assertEqual(locator.config['driver'],
         {
-            'type': 'sim_driver',
+            'type': 'SimDriver',
             'kwargs': {
                 "arg": "val"
             }
@@ -57,9 +56,9 @@ class TestLocator(unittest.TestCase):
         """
         global locator, config_paths
         locator.load_config(config_paths[0])
-        self.assertIsInstance(locator.get_driver(), test_driver_class,
+        self.assertIsInstance(locator.get_driver(), TestDriver,
         'get_driver did not return a test_driver when it was expected to.')
-        self.assertNotIsInstance(locator.get_driver(), sim_driver_class,
+        self.assertNotIsInstance(locator.get_driver(), SimDriver,
         'get_driver returned a sim_driver when it was expect to return a test_driver')
 
     def test_get_driver_sim_class(self):
@@ -68,9 +67,9 @@ class TestLocator(unittest.TestCase):
         """
         global locator, config_paths
         locator.load_config(config_paths[1])
-        self.assertNotIsInstance(locator.get_driver(), test_driver_class,
+        self.assertNotIsInstance(locator.get_driver(), TestDriver,
         'get_driver returned a test_driver when it was expect to return a sim_driver')
-        self.assertIsInstance(locator.get_driver(), sim_driver_class,
+        self.assertIsInstance(locator.get_driver(), SimDriver,
         'get_driver did not return a sim_driver when it was expected to.')
 
     def test_get_driver_returns_singleton(self):

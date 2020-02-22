@@ -3,7 +3,7 @@
         "simulation"
     ],
     "driver": {
-        "type": "sim_driver",
+        "type": "SimDriver",
         "kwargs": {}
     },
     "helmsman": {

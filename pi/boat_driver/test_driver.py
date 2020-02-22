@@ -1,7 +1,7 @@
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 
 
-class BoatDriver(AbstractBoatDriver):
+class TestDriver(AbstractBoatDriver):
     def __init__(self, **kwargs):
         self.verbose = kwargs['verbose']
         super().__init__(**kwargs)

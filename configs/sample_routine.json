@@ -3,7 +3,7 @@
         "sample_routine"
     ],
     "driver": {
-        "type": "test_driver",
+        "type": "TestDriver",
         "kwargs": {
             "verbose": false
         }

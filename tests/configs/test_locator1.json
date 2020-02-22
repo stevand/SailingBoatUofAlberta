@@ -3,7 +3,7 @@
         "simulate"
     ],
     "driver": {
-        "type": "sim_driver",
+        "type": "SimDriver",
         "kwargs": {
             "arg": "val"
         }
