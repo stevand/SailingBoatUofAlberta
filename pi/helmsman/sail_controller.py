@@ -1,35 +1,45 @@
-import threading
-from time import sleep
+import locator
+from pi.interval_repeater import IntervalRepeater
+from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 
 
-def start(driver, is_enabled=lambda: False, go_fast=lambda: True, interval=0.1):
-    """Starts a sail controller on a seperate thread that attempts to maximize or minimize speed. The thread will close if the program exits."""
-    control_thread = threading.Thread(target=sail_controller, daemon=True, args=(
-        driver, is_enabled, go_fast, interval))
-    control_thread.start()
+class SailController(IntervalRepeater):
+    def __init__(self, driver: AbstractBoatDriver, go_fast: bool = True, interval=0.1, **kwargs):
+        """
+        Args:
+            driver: An instance of a boat driver
+            go_fast: Whether or not the controller will initally try to maximize speed
 
+        """
+        super().__init__(interval=interval, **kwargs)
+        self._driver = driver
+        self._go_fast = go_fast
+        self._start_interval_repeater()
 
-def sail_controller(driver, is_enabled, go_fast, interval):
-    while True:
-        if is_enabled():
-            try:
-                if go_fast():
-                    maximize_speed(driver)
-                else:
-                    minimize_speed(driver)
-            except Exception:
-                print('Disabling sail_controller as it could not read from driver.')
-                # break
-        sleep(interval)
+    @classmethod
+    def create(cls, config) -> 'SailController':
+        return cls(locator.get_driver(), **config)
 
+    def _interval_process(self):
+        if self.go_fast:
+            self._maximize_speed()
+        else:
+            self._minimize_speed()
 
-def maximize_speed(driver):
-    #print('Reading wind direction as ', driver.get_wind_dir())
-    #print('Relative wind ', driver.get_wind_dir_rel())
-    #print('setting sail to ', min(abs(driver.get_wind_dir_rel()), 75))
-    driver.set_sail(min(abs(driver.get_wind_dir_rel()) / 2, 90))
-    # driver.set_sail(90)
+    @property
+    def go_fast(self) -> bool:
+        return self._go_fast
 
+    @go_fast.setter
+    def go_fast(self, new_val: bool):
+        self._go_fast = new_val
 
-def minimize_speed(driver):
-    driver.set_sail(0)
+    def _maximize_speed(self):
+        # This is a simple heuristic, can be replaced
+        sail_angle = min(abs(self._driver.get_wind_dir_rel()) / 2, 90)
+        self._driver.set_sail(sail_angle)
+
+    def _minimize_speed(self):
+        #Removes all slack from the mainsheet
+        self._driver.set_sail(0)
+        
