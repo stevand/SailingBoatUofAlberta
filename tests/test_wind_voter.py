@@ -1,7 +1,7 @@
 import unittest
 import locator
 from pi.navigator.poll_navigator.voter import WindVoter
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 
 
 locator.load_config('tests/configs/test_voter.json')

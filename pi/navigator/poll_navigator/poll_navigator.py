@@ -1,7 +1,7 @@
 from threading import Thread
 from pi.navigator import AbstractNavigator
 from pi.helmsman import Helmsman
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 from .voter import WaypointVoter, WindVoter, ChannelVoter, ManueverVoter
 from pi.navutils import dist
 from time import sleep

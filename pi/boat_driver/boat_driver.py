@@ -1,5 +1,5 @@
 import serial
-from .abstract_boat_driver import AbstractBoatDriver
+from . import AbstractBoatDriver
 from time import perf_counter
 from threading import Lock
 

@@ -1,5 +1,5 @@
 import abc
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 from pi.helmsman import Helmsman
 from threading import Thread
 from pi.navutils import dist

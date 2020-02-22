@@ -2,7 +2,7 @@ from . import AbstractNavigator
 from threading import Thread
 from time import sleep
 from pi.navutils import dist, dir_to_waypoint
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 from pi.helmsman import Helmsman
 import math
 

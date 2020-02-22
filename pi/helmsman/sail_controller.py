@@ -1,6 +1,6 @@
 import locator
 from pi.interval_repeater import IntervalRepeater
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 
 
 class SailController(IntervalRepeater):

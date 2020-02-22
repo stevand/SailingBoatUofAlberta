@@ -3,7 +3,7 @@ import json
 from pi.helmsman import Helmsman, SailController, RudderController
 import sim.sim_runner as sim_runner
 from pi.server import flask_server
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 from sim.sim_interface import SimulatorInterface
 from sim.simulator import Simulator
 from pi.navigator import AbstractNavigator

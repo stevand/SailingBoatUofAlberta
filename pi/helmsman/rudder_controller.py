@@ -2,7 +2,7 @@ from simple_pid import PID
 from time import sleep
 from pi.navutils import shortest_path
 from pi.interval_repeater import IntervalRepeater
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 import threading
 import locator
 

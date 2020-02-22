@@ -1,5 +1,5 @@
 from . import RudderController, SailController
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 import locator
 
 

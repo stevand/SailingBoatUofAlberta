@@ -1,4 +1,4 @@
-from .abstract_boat_driver import AbstractBoatDriver
+from . import AbstractBoatDriver
 from math import pi
 import locator
 

@@ -1,4 +1,4 @@
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from . import AbstractBoatDriver
 
 
 class TestDriver(AbstractBoatDriver):

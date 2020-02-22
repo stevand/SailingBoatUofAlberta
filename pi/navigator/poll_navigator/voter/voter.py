@@ -1,5 +1,5 @@
 import abc
-from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+from pi.boat_driver import AbstractBoatDriver
 
 class Voter(abc.ABC):
 
