@@ -1,23 +1,21 @@
-from . import rudder_controller, SailController
+from . import RudderController, SailController
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 import locator
 
 
 class Helmsman:
-    def __init__(self, driver: AbstractBoatDriver, sail_ctrl: SailController = None, **kwargs):
+    def __init__(self, driver: AbstractBoatDriver, sail_controller: SailController = None, rudder_controller: RudderController = None, **kwargs):
         self._driver = driver
         # Sail tolerance is how close to the wind the boat is able to sail
         self.tolerance = 30
         # Error is the maximum allowed amount of get_heading error
         self.error = 1
-        self.desired_heading = 90
 
-        # Starts rudder controller
-        self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']
-        rudder_controller.start(driver, lambda: self.desired_heading,
-                                lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
+        self._rudder_controller = rudder_controller
+        self._sail_controller = sail_controller
 
-        self._sail_controller = sail_ctrl
+        self.turn(0)
+        self.maximize_speed = False
 
     @classmethod
     def create(cls, config) -> 'Helmsman':
@@ -28,7 +26,7 @@ class Helmsman:
             "sail_controller": a SailController config dict
             "rudder_controller": a RudderController config dict
         """
-        return Helmsman(locator.get_driver(), locator.get_sail_controller(), **config)
+        return Helmsman(locator.get_driver(), locator.get_sail_controller(), locator.get_rudder_controller(), **config)
 
     def turn(self, new_heading):
         """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""
