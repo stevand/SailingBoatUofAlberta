@@ -11,9 +11,9 @@
     },
     "helmsman": {
         "kwargs": {
+            "kwargs": {},
             "rudder_controller": {
                 "enabled": false,
-                "type": "pid",
                 "interval": 2
             },
             "sail_controller": {

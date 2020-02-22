@@ -10,6 +10,7 @@
         }
     },
     "helmsman": {
+        "kwargs": {},
         "rudder_controller": {
             "enabled": false,
             "type": "pid",
