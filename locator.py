@@ -1,6 +1,6 @@
 from importlib import import_module
 import json
-from pi.helmsman import Helmsman
+from pi.helmsman import Helmsman, SailController
 import sim.sim_runner as sim_runner
 from pi.server import flask_server
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
@@ -14,6 +14,12 @@ driver = None
 helmsman = None
 sim_interface = None
 navigator = None
+sail_controller = None
+
+instances = {
+    SailController: None,
+}
+
 
 def load_config(config_path):
     """
@@ -26,13 +32,36 @@ def load_config(config_path):
             ''.join(config_file.readlines())
         )
 
+
 def get_config():
     """
     Returns a dictionary representation of the config file.
-    A config file must have been loaded already.
+    Returns None if no config file has been loaded yet.
     """
     return config
-    
+
+
+def cached(instance_type: type):
+    """
+    Returns a decorator that caches singletons in instances[type].
+    An exception will be raised if no config has been loaded.
+    """
+    def decorator(getter):
+        def wrapper():
+            global config, instances
+            if not config:
+                raise Exception('No configuration file loaded. Use the load_config function before using any getters.')
+
+            if instances[instance_type] is not None:
+                return instances[instance_type]
+
+            instances[instance_type] = getter(config)
+            return instances[instance_type]
+
+        return wrapper
+    return decorator
+
+
 def get_driver() -> AbstractBoatDriver:
     """
     Returns the (singleton) instance of BoatDriver. 
@@ -47,16 +76,27 @@ def get_driver() -> AbstractBoatDriver:
 
     driver_config = config['driver']
     # imports the type of BoatDriver specified in config file
-    BoatDriver = import_module('pi.boat_driver.'+driver_config['type']).BoatDriver
+    BoatDriver = import_module(
+        'pi.boat_driver.'+driver_config['type']).BoatDriver
     # driver insta
     driver = BoatDriver(**driver_config['kwargs'])
     if driver_config['type'] == 'sim_driver':
         driver.get_frame = get_sim_interface().current_frame
     return driver
 
+
+@cached(SailController)
+def get_sail_controller(config) -> SailController:
+    """
+    Returns the (singleton) SailController instance
+    """
+    sail_controller_config = config['helmsman']['sail_controller']
+    return SailController.create(sail_controller_config)
+
+
 def get_helmsman() -> Helmsman:
     """
-    Returns the (singleton) Helsman instance.
+    Returns the (singleton) Helmsman instance.
     A new instance of the helmsman will be created only if one has not yet been instantiated.
     The driver used by the helmsman will be accessed with get_driver
     """
@@ -66,8 +106,9 @@ def get_helmsman() -> Helmsman:
 
     helmsman_config = config['helmsman']
     driver = get_driver()
-    helmsman = Helmsman(driver, **config['helmsman']['kwargs'])
+    helmsman = Helmsman(driver, **helmsman_config['kwargs'])
     return helmsman
+
 
 def get_server_runnable():
     """
@@ -78,36 +119,40 @@ def get_server_runnable():
     server_config = config['server']
     driver = get_driver()
     helmsman = get_helmsman()
-    server = flask_server.create_app(driver, helmsman=helmsman, **server_config['kwargs'])
+    server = flask_server.create_app(
+        driver, helmsman=helmsman, **server_config['kwargs'])
 
     def run():
         server.run(host=server_config['host'])
 
     return run
 
+
 def get_sim_interface(**kwargs) -> SimulatorInterface:
     """
     Returns the (singleton) SimulatorInterface instance.
     """
     global config, sim_interface, simulator
-    
+
     if sim_interface:
         return sim_interface
 
     sim_interface, simulator = sim_runner.load_sim(**kwargs)
     return sim_interface
 
+
 def get_simulator() -> Simulator:
     """
     Returns the (singleton) Simulator instance.
     """
     global config, sim_interface, simulator
-    
+
     if simulator:
         return simulator
 
     sim_interface, simulator = sim_runner.load_sim()
     return simulator
+
 
 def get_navigator() -> AbstractNavigator:
     """
@@ -117,13 +162,14 @@ def get_navigator() -> AbstractNavigator:
 
     if navigator:
         return navigator
-    
+
     nav_config = config['navigator']
     module = import_module('pi.navigator')
     Navigator = getattr(module, nav_config['type'])
-    
+
     navigator = Navigator(get_driver(), get_helmsman(), **nav_config['kwargs'])
     return navigator
+
 
 def close_resources():
     """
