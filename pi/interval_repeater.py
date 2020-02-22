@@ -6,6 +6,8 @@ from time import sleep
 class IntervalRepeater(abc.ABC):
     """
     Mixin that repeats process at regualar intervals in a seperate thread. Derived classes need only implement the _interval_process method, which will be repeatedly executed whenever the IntervalRepeater is enabled. The IntervalRepeater can be enabled/disabled by changing the enabled property.
+
+    To start the interval repeater after instantiation, call self._start_interval_repeater
     """
 
     def __init__(self, interval: float = 1, enabled: bool = True, **kwargs):
