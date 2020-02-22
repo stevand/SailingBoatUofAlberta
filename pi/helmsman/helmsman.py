@@ -12,18 +12,16 @@ class Helmsman:
 
         # Starts rudder controller
         self.rudder_controller_enabled = kwargs['rudder_controller']['enabled']
-        rudder_controller.start(driver, lambda: self.desired_heading, lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
+        rudder_controller.start(driver, lambda: self.desired_heading,
+                                lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
 
         self.sail_controller_enabled = kwargs['sail_controller']['enabled']
         self.maximize_speed = True
-        sail_controller.start(driver, lambda: self.sail_controller_enabled, go_fast=lambda: self.maximize_speed, interval=kwargs['sail_controller']['interval'])
+        sail_controller.start(driver, lambda: self.sail_controller_enabled,
+                              go_fast=lambda: self.maximize_speed, interval=kwargs['sail_controller']['interval'])
 
         # Initialize winch to 0 Degrees
         self._driver.set_sail(0)
-
-    def adjust(self):
-        """Adjusts the angle of the sails to maximize velocity on current get_heading"""
-        self._driver.set_sail(min(abs(self._driver.get_rel_wind_dir()), 90))
 
     def turn(self, new_heading):
         """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""
@@ -37,7 +35,7 @@ class Helmsman:
             diff = high - low
 
         # If new heading is in irons
-        #if diff < self.tolerance:
+        # if diff < self.tolerance:
         #    return False
 
         # Else if new heading is valid
