@@ -13,7 +13,6 @@
         "kwargs": {},
         "rudder_controller": {
             "enabled": false,
-            "type": "pid",
             "interval": 0.001
         },
         "sail_controller": {
