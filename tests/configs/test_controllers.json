@@ -1,5 +1,5 @@
 {
-    "description": "Used for testing rudder and sail controllers. Update intervals are set to very small values for rapid testing.",
+    "description": "Used for testing rudder and sail controllers. Update intervals are set to very small values for rapid testing. Controllers are off initially.",
     "routines": [
         "run_server"
     ],
@@ -10,16 +10,14 @@
         }
     },
     "helmsman": {
-        "kwargs": {
-            "rudder_controller": {
-                "enabled": false,
-                "type": "pid",
-                "interval": 0.001
-            },
-            "sail_controller": {
-                "enabled": false,
-                "interval": 0.001
-            }
+        "rudder_controller": {
+            "enabled": false,
+            "type": "pid",
+            "interval": 0.001
+        },
+        "sail_controller": {
+            "enabled": false,
+            "interval": 0.001
         }
     },
     "server": {

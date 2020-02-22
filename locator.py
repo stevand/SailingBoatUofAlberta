@@ -106,7 +106,7 @@ def get_helmsman() -> Helmsman:
 
     helmsman_config = config['helmsman']
     driver = get_driver()
-    helmsman = Helmsman(driver, **helmsman_config['kwargs'])
+    helmsman = Helmsman(driver, **helmsman_config)
     return helmsman
 
 

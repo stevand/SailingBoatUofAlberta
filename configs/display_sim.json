@@ -4,34 +4,28 @@
     ],
     "driver": {
         "type": "sim_driver",
-        "kwargs": {
-        }
+        "kwargs": {}
     },
     "helmsman": {
-        "kwargs": {
-            "rudder_controller": {
-                "enabled": true,
-                "type": "pid",
-                "interval": 0.1
-            },
-            "sail_controller": {
-                "enabled": true,
-                "interval": 0.2
-            }
+        "rudder_controller": {
+            "enabled": true,
+            "type": "pid",
+            "interval": 0.1
+        },
+        "sail_controller": {
+            "enabled": true,
+            "interval": 0.2
         }
     },
     "navigator": {
         "type": "PollNavigator",
-        "kwargs":{
-        }
+        "kwargs": {}
     },
-    "server":{
+    "server": {
         "host": "0.0.0.0",
-        "kwargs":{
-
-        }
+        "kwargs": {}
     },
-    "simulation":{
+    "simulation": {
         "log_file": "sim/log.json"
     }
 }

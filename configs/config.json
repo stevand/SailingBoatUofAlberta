@@ -4,29 +4,24 @@
     ],
     "driver": {
         "type": "sim_driver",
-        "kwargs": {
-        }
+        "kwargs": {}
     },
     "helmsman": {
-        "kwargs": {
-            "rudder_controller": {
-                "enabled": false,
-                "type": "pid",
-                "interval": 2
-            },
-            "sail_controller": {
-                "enabled": true,
-                "interval": 3
-            }
+        "rudder_controller": {
+            "enabled": false,
+            "type": "pid",
+            "interval": 2
+        },
+        "sail_controller": {
+            "enabled": true,
+            "interval": 3
         }
     },
-    "server":{
+    "server": {
         "host": "0.0.0.0",
-        "kwargs":{
-
-        }
+        "kwargs": {}
     },
-    "simulation":{
+    "simulation": {
         "display": true,
         "run": false,
         "log_file": "sim/log.json",
