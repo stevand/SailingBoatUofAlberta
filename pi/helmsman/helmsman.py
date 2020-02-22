@@ -29,22 +29,8 @@ class Helmsman:
         return Helmsman(locator.get_driver(), locator.get_sail_controller(), locator.get_rudder_controller(), **config)
 
     def turn(self, new_heading):
-        """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""
-        # Get shortest distance between new_heading and wind direction
-        wind_dir = self._driver.get_wind_dir()
-        high = max(wind_dir, new_heading)
-        low = min(wind_dir, new_heading)
-        if high > (low + 180):
-            diff = 360 - high + low
-        else:
-            diff = high - low
-
-        # If new heading is in irons
-        # if diff < self.tolerance:
-        #    return False
-
-        # Else if new heading is valid
-        self.desired_heading = new_heading
+        """Turns the boat to face the new_heading."""
+        self._rudder_controller.desired_heading = new_heading
         return True
 
     def turn_rel(self, degrees):
@@ -66,7 +52,7 @@ class Helmsman:
     def status(self):
         return {
             'tolerance': self.tolerance,
-            'desired_heading': self.desired_heading,
+            'desired_heading': self._rudder_controller.desired_heading,
             'maximize_speed': self.maximize_speed,
             'rudder_controller': {
                 'enabled': self.rudder_controller_enabled
