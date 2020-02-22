@@ -20,7 +20,7 @@ class Helmsman:
     @classmethod
     def create(cls, config) -> 'Helmsman':
         """
-        Constructs an instance of a Helmsman.
+        Constructs an instance of a Helmsman using the locator to get dependencies.
 
         config should be a dict with the following entries:
             "sail_controller": a SailController config dict

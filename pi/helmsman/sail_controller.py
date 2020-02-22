@@ -19,7 +19,7 @@ class SailController(IntervalRepeater):
     @classmethod
     def create(cls, config) -> 'SailController':
         """
-        Constructs an instance of a SailController
+        Constructs an instance of a SailController, using the locator to get any dependencies.
         Args:
             config: a dict that contains optional parameters for the SailController and IntervalRepeater constructors
         """
