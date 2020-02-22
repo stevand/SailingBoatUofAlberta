@@ -18,7 +18,7 @@ class AbstractBoatDriver(abc.ABC):
         Args:
             config: a dict containing any optional parameters for the constructor
         """
-        return cls()
+        return cls(**config)
 
     @abc.abstractmethod
     def close(self):
