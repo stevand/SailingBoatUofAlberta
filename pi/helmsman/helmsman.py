@@ -21,6 +21,13 @@ class Helmsman:
 
     @classmethod
     def create(cls, config) -> 'Helmsman':
+        """
+        Constructs an instance of a Helmsman.
+
+        config should be a dict with the following entries:
+            "sail_controller": a SailController config dict
+            "rudder_controller": a RudderController config dict
+        """
         return Helmsman(locator.get_driver(), locator.get_sail_controller(), **config)
 
     def turn(self, new_heading):
