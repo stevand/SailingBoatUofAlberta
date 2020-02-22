@@ -1,11 +1,16 @@
 from .abstract_boat_driver import AbstractBoatDriver
 from math import pi
+import locator
 
 class SimDriver(AbstractBoatDriver):
     # get_frame is a callback that returns the most recent frame
     def __init__(self, get_frame=None, **kwargs):
         super().__init__(**kwargs)
         self.get_frame = get_frame
+
+    @classmethod
+    def create(cls, config):
+        return SimDriver(get_frame=locator.get_sim_interface().current_frame, **config)
 
     def get_wind_dir_true(self):
         return 90

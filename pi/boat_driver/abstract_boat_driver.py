@@ -1,4 +1,5 @@
 import abc
+from typing import Dict
 
 
 class AbstractBoatDriver(abc.ABC):
@@ -9,6 +10,15 @@ class AbstractBoatDriver(abc.ABC):
         self.set_rudder(0)
         self.__sail = 0
         self.__rudder = 0
+
+    @classmethod
+    def create(cls, config: Dict):
+        """
+        Creates a new instance of an AbstractBoatDriver.
+        Args:
+            config: a dict containing any optional parameters for the constructor
+        """
+        return cls()
 
     @abc.abstractmethod
     def close(self):

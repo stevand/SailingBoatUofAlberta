@@ -61,28 +61,17 @@ def cached(instance_type: type):
         return wrapper
     return decorator
 
-
-def get_driver() -> AbstractBoatDriver:
+@cached(AbstractBoatDriver)
+def get_driver(config=None) -> AbstractBoatDriver:
     """
     Returns the (singleton) instance of BoatDriver. 
     A new instance of the driver will be created only if one has not yet been instantiated.
     """
-    global driver, config
-
-    if not config:
-        raise Exception('No configuration file loaded. Use ')
-    if driver:
-        return driver
-
     driver_config = config['driver']
     # imports the type of BoatDriver specified in config file
     module = import_module('pi.boat_driver')
     DriverClass = getattr(module, driver_config['type'])
-    # driver instance
-    driver = DriverClass(**driver_config['kwargs'])
-    if driver_config['type'] == 'SimDriver':
-        driver.get_frame = get_sim_interface().current_frame
-    return driver
+    return DriverClass.create(driver_config['kwargs'])
 
 
 @cached(SailController)

@@ -2,13 +2,13 @@ from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 
 
 class TestDriver(AbstractBoatDriver):
-    def __init__(self, **kwargs):
-        self.verbose = kwargs['verbose']
-        super().__init__(**kwargs)
+    def __init__(self, verbose=False, **kwargs):
+        self.verbose = verbose
         self.heading = 0
         self.position = (0, 0)
         self.wind_dir = 0
         self.wind_speed = 0
+        super().__init__(**kwargs)
 
     def reset(self):
         """Sets all internal values to 0"""
