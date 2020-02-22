@@ -4,6 +4,7 @@ from pi.navutils import shortest_path
 from pi.interval_repeater import IntervalRepeater
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
 import threading
+import locator
 
 
 def start(driver, get_desired_heading, is_enabled, interval=2, p=5, i=0.01, d=0):
@@ -72,6 +73,7 @@ class RudderController(IntervalRepeater):
         Args:
             config: a dict that contains optional parameters for the RudderController and IntervalRepeater constructors
         """
+        return cls(locator.get_driver(), **config)
 
     def _interval_process(self):
         angle_to_desired = shortest_path(

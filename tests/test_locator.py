@@ -2,6 +2,7 @@ import unittest
 from importlib import reload
 from pi.boat_driver.test_driver import BoatDriver as test_driver_class
 from pi.boat_driver.sim_driver import BoatDriver as sim_driver_class
+from pi.helmsman import RudderController
 from sim.sim_interface import SimulatorInterface
 import json
 import locator
@@ -178,6 +179,12 @@ class TestLocator(unittest.TestCase):
        
         self.assertEqual(sc1, sc2,
         'Two subsequent calls of get_sail_controller returned different instances.')
+
+    def test_get_rudder_controller(self):
+        global locator, config_paths
+        locator.load_config(config_paths[0])
+        rc = locator.get_rudder_controller()
+        self.assertIsInstance(rc, RudderController)
 
 if __name__ == '__main__':
     unittest.main()

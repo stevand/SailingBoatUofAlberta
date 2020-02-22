@@ -1,6 +1,6 @@
 from importlib import import_module
 import json
-from pi.helmsman import Helmsman, SailController
+from pi.helmsman import Helmsman, SailController, RudderController
 import sim.sim_runner as sim_runner
 from pi.server import flask_server
 from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
@@ -17,7 +17,6 @@ navigator = None
 sail_controller = None
 
 instances = {
-    SailController: None,
 }
 
 
@@ -53,7 +52,7 @@ def cached(instance_type: type):
                 raise Exception(
                     'No configuration file loaded. Use the load_config function before using any getters.')
 
-            if instances[instance_type] is not None:
+            if instance_type in instances:
                 return instances[instance_type]
 
             instances[instance_type] = getter(config)
@@ -102,9 +101,14 @@ def get_helmsman(config=None) -> Helmsman:
     A new instance of the helmsman will be created only if one has not yet been instantiated.
     The driver used by the helmsman will be accessed with get_driver
     """
-    helmsman_config = config['helmsman']
+    helmsman_config = config['helmsman']['kwargs']
     return Helmsman.create(helmsman_config)
 
+
+@cached(RudderController)
+def get_rudder_controller(config=None) -> RudderController:
+    rudder_controller_config = config['helmsman']['rudder_controller']
+    return RudderController.create(rudder_controller_config)
 
 def get_server_runnable():
     """
