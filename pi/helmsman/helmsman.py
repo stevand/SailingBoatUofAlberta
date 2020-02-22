@@ -4,7 +4,7 @@ import locator
 
 
 class Helmsman:
-    def __init__(self, driver: AbstractBoatDriver, sail_controller: SailController = None, rudder_controller: RudderController = None, **kwargs):
+    def __init__(self, driver: AbstractBoatDriver, sail_controller: SailController, rudder_controller: RudderController, **kwargs):
         self._driver = driver
         # Sail tolerance is how close to the wind the boat is able to sail
         self.tolerance = 30
@@ -91,3 +91,11 @@ class Helmsman:
     @maximize_speed.setter
     def maximize_speed(self, new_val: bool):
         self._sail_controller.go_fast = new_val
+
+    @property
+    def rudder_controller_enabled(self) -> bool:
+        return self._rudder_controller.enabled
+
+    @rudder_controller_enabled.setter
+    def rudder_controller(self, new_val: bool):
+        self._rudder_controller.enabled = new_val
