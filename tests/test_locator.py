@@ -167,5 +167,17 @@ class TestLocator(unittest.TestCase):
         self.assertEqual(sim_interface1, sim_interface2,
         'Two subsequent calls of get_sim_interface returned different instances.')
 
+    def test_get_sail_controller_returns_singleton(self):
+        """
+        Tests that get_sim_sail_controller returns only a single instance of the sail_controller, regardless of how many times it is called.
+        """
+        global locator, config_paths
+        locator.load_config(config_paths[0])
+        sc1 = locator.get_sail_controller()
+        sc2 = locator.get_sail_controller()
+       
+        self.assertEqual(sc1, sc2,
+        'Two subsequent calls of get_sail_controller returned different instances.')
+
 if __name__ == '__main__':
     unittest.main()
