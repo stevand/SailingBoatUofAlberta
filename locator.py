@@ -50,7 +50,8 @@ def cached(instance_type: type):
         def wrapper():
             global config, instances
             if not config:
-                raise Exception('No configuration file loaded. Use the load_config function before using any getters.')
+                raise Exception(
+                    'No configuration file loaded. Use the load_config function before using any getters.')
 
             if instances[instance_type] is not None:
                 return instances[instance_type]
@@ -86,7 +87,7 @@ def get_driver() -> AbstractBoatDriver:
 
 
 @cached(SailController)
-def get_sail_controller(config) -> SailController:
+def get_sail_controller(config=None) -> SailController:
     """
     Returns the (singleton) SailController instance
     """
@@ -94,20 +95,15 @@ def get_sail_controller(config) -> SailController:
     return SailController.create(sail_controller_config)
 
 
-def get_helmsman() -> Helmsman:
+@cached(SailController)
+def get_helmsman(config=None) -> Helmsman:
     """
     Returns the (singleton) Helmsman instance.
     A new instance of the helmsman will be created only if one has not yet been instantiated.
     The driver used by the helmsman will be accessed with get_driver
     """
-    global config, helmsman
-    if helmsman:
-        return helmsman
-
     helmsman_config = config['helmsman']
-    driver = get_driver()
-    helmsman = Helmsman(driver, **helmsman_config)
-    return helmsman
+    return Helmsman.create(helmsman_config)
 
 
 def get_server_runnable():

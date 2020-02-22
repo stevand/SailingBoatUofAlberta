@@ -1,8 +1,10 @@
-from . import rudder_controller, sail_controller
+from . import rudder_controller, SailController
+from pi.boat_driver.abstract_boat_driver import AbstractBoatDriver
+import locator
 
 
 class Helmsman:
-    def __init__(self, driver, **kwargs):
+    def __init__(self, driver: AbstractBoatDriver, sail_ctrl: SailController = None, **kwargs):
         self._driver = driver
         # Sail tolerance is how close to the wind the boat is able to sail
         self.tolerance = 30
@@ -15,13 +17,11 @@ class Helmsman:
         rudder_controller.start(driver, lambda: self.desired_heading,
                                 lambda: self.rudder_controller_enabled, interval=kwargs['rudder_controller']['interval'])
 
-        self.sail_controller_enabled = kwargs['sail_controller']['enabled']
-        self.maximize_speed = True
-        sail_controller.start(driver, lambda: self.sail_controller_enabled,
-                              go_fast=lambda: self.maximize_speed, interval=kwargs['sail_controller']['interval'])
+        self._sail_controller = sail_ctrl
 
-        # Initialize winch to 0 Degrees
-        self._driver.set_sail(0)
+    @classmethod
+    def create(cls, config) -> 'Helmsman':
+        return Helmsman(locator.get_driver(), locator.get_sail_controller(), **config)
 
     def turn(self, new_heading):
         """Turns the boat to face the new_heading. Returns False if the new_heading is in irons, True otherwise"""
@@ -70,3 +70,19 @@ class Helmsman:
                 'enabled': self.sail_controller_enabled
             }
         }
+
+    @property
+    def sail_controller_enabled(self) -> bool:
+        return self._sail_controller.enabled
+
+    @sail_controller_enabled.setter
+    def sail_controller_enabled(self, new_val: bool):
+        self._sail_controller.enabled = new_val
+
+    @property
+    def maximize_speed(self) -> bool:
+        return self._sail_controller.go_fast
+
+    @maximize_speed.setter
+    def maximize_speed(self, new_val: bool):
+        self._sail_controller.go_fast = new_val
