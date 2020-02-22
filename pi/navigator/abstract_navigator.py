@@ -6,6 +6,7 @@ from pi.navutils import dist
 from time import sleep
 from pi.interval_repeater import IntervalRepeater
 from typing import List, Tuple
+import locator
 
 Waypoint = Tuple[int, int]
 
@@ -23,6 +24,15 @@ class AbstractNavigator(IntervalRepeater, abc.ABC):
         self.__last_waypoint = self._driver.get_position()
         self.waypoint_dist = waypoint_dist
         self._start_interval_repeater()
+
+    @classmethod
+    def create(cls, config):
+        """
+        Creates a new instance of an AbstractNaviagor, using the locator to get any dependencies.
+        Args:
+            config: a dict containing any optional parameters for self.__init__
+        """
+        return cls(locator.get_driver(), locator.get_helmsman(), **config)
 
     def _interval_process(self):
         """
