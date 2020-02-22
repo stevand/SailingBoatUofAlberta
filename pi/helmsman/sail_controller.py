@@ -20,10 +20,8 @@ class SailController(IntervalRepeater):
     def create(cls, config) -> 'SailController':
         """
         Constructs an instance of a SailController
-        
-        config should be a dict with the following entries:
-            "enabled": bool #optional IntervalRepeater param
-            "interval": float #optional IntervalRepeater param
+        Args:
+            config: a dict that contains optional parameters for the SailController and IntervalRepeater constructors
         """
         return cls(locator.get_driver(), **config)
 
@@ -47,6 +45,5 @@ class SailController(IntervalRepeater):
         self._driver.set_sail(sail_angle)
 
     def _minimize_speed(self):
-        #Removes all slack from the mainsheet
+        # Removes all slack from the mainsheet
         self._driver.set_sail(0)
-        
