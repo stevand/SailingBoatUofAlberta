@@ -107,6 +107,10 @@ def get_helmsman(config=None) -> Helmsman:
 
 @cached(RudderController)
 def get_rudder_controller(config=None) -> RudderController:
+    """
+    Returns the (singleton) RudderController instance.
+    The driver used will be accessed with get_driver
+    """
     rudder_controller_config = config['helmsman']['rudder_controller']
     return RudderController.create(rudder_controller_config)
 
