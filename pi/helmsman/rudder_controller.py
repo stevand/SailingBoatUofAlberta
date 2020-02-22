@@ -64,7 +64,7 @@ class RudderController(IntervalRepeater):
         self._pid = PID(p, i, d, sample_time=interval, output_limits=(-45, 45))
         # will try to bring difference between current and desired heading to 0
         self._pid.setpoint = 0
-        self._start_interval_repeater
+        self._start_interval_repeater()
 
     @classmethod
     def create(cls, config) -> 'RudderController':
