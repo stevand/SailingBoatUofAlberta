@@ -18,6 +18,13 @@ class SailController(IntervalRepeater):
 
     @classmethod
     def create(cls, config) -> 'SailController':
+        """
+        Constructs an instance of a SailController
+        
+        config should be a dict with the following entries:
+            "enabled": bool #optional IntervalRepeater param
+            "interval": float #optional IntervalRepeater param
+        """
         return cls(locator.get_driver(), **config)
 
     def _interval_process(self):
