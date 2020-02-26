@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sim.sim_runner as sim_runner
 
 
-def exec(_):
+def exec():
     sim_interface = locator.get_sim_interface()
     assert isinstance(sim_interface, SimulatorInterface)
     root = tk.Tk()

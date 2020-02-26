@@ -1,7 +1,8 @@
 from time import sleep
 from threading import Thread
+import locator
 
-def exec(locator):
+def exec():
 
     done = False
 
