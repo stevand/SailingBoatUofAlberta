@@ -1,3 +1,7 @@
+"""
+A service locator that enables quick access to singletons for use in routines and dependency injection.
+"""
+
 from importlib import import_module
 import json
 from pi.helmsman import Helmsman, SailController, RudderController
