@@ -42,7 +42,7 @@ for routine in routines:
         terminate()
 
     # executes routine
-    blocking, is_done, cleanup = routine_script.exec(locator)
+    blocking, is_done, cleanup = routine_script.exec()
 
     # waits until routine is finished if it is blocking
     if blocking:

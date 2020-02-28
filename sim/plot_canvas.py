@@ -15,7 +15,7 @@ def setup(frame):
     ax1 = plt.subplot(1, 3, 1)
     fig.subplots_adjust(left=0.1,right=1,bottom=0.1,top=1)
     # Size of the "water" (distance from the origin (0,0))
-    r=3
+    r=5
     
 #    Use this for a circular map
 #    theta=np.linspace(0.0,2.0*np.pi,100)
@@ -96,8 +96,8 @@ def updplot(frame):
     #print(clock())
     #Creates the boat curves
     theta=np.linspace(0.0,2.0*np.pi,100)
-    c=0.1
-    a=0.1
+    c=0.5
+    a=0.5
     e=0.95
     xb=c+np.cos(theta)*a*(1-e**2)/(1+e*np.cos(theta))
     yb=np.sin(theta)*a*(1-e**2)/(1+e*np.cos(theta))

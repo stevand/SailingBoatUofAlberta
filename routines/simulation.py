@@ -6,7 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import sim.sim_runner as sim_runner
 
 
-def exec(_):
+def exec():
     sim_interface = locator.get_sim_interface()
     assert isinstance(sim_interface, SimulatorInterface)
     root = tk.Tk()
@@ -22,7 +22,7 @@ def exec(_):
     helmsman = locator.get_helmsman()
     # print(helmsman.turn(260))
     navigator = locator.get_navigator()
-    navigator.add_waypoint((0, 2))
+    navigator.add_waypoint((1, 4))
 
     # creates getters for the env/control from the driver
     get_control = sim_runner.make_control_getter(driver)

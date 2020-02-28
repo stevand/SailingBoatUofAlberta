@@ -1,3 +1,10 @@
+"""
+A service locator that provides quick access to fully wired instances that can be used in routines and to facilitate IoC through dependency injection. 
+The locator handles construction of objects so that consumers need not depend on any particular configuration.
+Instances can be fetched with their corresponding getter methods.
+Control structures (driver, helmsman, navigators, etc) are only instantiated once.
+"""
+
 from importlib import import_module
 import json
 from pi.helmsman import Helmsman, SailController, RudderController

@@ -7,8 +7,9 @@ python manager.py configs/sample_routine.json
 """
 from threading import Thread
 from time import sleep
+import locator # import the locator to get access instances
 
-def exec(locator): # all routines take the locator in as a parameter
+def exec():
     """
     All routines return:
         blocking (bool): Whether or not the manager should wait until this routine is finished 

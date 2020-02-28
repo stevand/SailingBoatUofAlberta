@@ -1,6 +1,7 @@
 import threading
+import locator
 
-def exec(locator):
+def exec():
     """
     Begins a flask server in a deamon thread.
     Returns is_done method, which will always return false.
