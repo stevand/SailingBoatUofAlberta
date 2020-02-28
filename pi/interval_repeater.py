@@ -51,4 +51,4 @@ class IntervalRepeater(abc.ABC):
 
     @enabled.setter
     def enabled(self, new_val: bool):
-        self._enabled = new_val
+        self.__enabled = new_val
