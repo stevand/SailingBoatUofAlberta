@@ -10,22 +10,18 @@
         }
     },
     "helmsman": {
-        "kwargs": {
-            "kwargs": {},
-            "rudder_controller": {
-                "enabled": false,
-                "interval": 2
-            },
-            "sail_controller": {
-                "enabled": false,
-                "interval": 3
-            }
+        "kwargs": {},
+        "rudder_controller": {
+            "enabled": false,
+            "interval": 2
+        },
+        "sail_controller": {
+            "enabled": false,
+            "interval": 3
         }
     },
-    "server":{
+    "server": {
         "host": "0.0.0.0",
-        "kwargs":{
-
-        }
-    },
+        "kwargs": {}
+    }
 }
