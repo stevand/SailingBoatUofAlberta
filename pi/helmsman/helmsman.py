@@ -83,5 +83,5 @@ class Helmsman:
         return self._rudder_controller.enabled
 
     @rudder_controller_enabled.setter
-    def rudder_controller(self, new_val: bool):
+    def rudder_controller_enabled(self, new_val: bool):
         self._rudder_controller.enabled = new_val
