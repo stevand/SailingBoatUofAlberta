@@ -14,13 +14,17 @@ else:
     routines = locator.get_config()['routines']
 
 # stores functions that check if non-blocking routines are done
-routines_done = [] 
+routines_done = []
 # stores clean up functions for non-blocking routines
 routines_cleanup = []
 
+
 def terminate():
+    print('Cleaning up routines')
+    locator.close_resources()
     for cleanup in routines_cleanup:
         cleanup()
+    print('Finished clean up, terminating')
     exit()
 
 # runs all cleanup functions and exits if there is a keyboard interrupt
@@ -38,7 +42,6 @@ for routine in routines:
         routine_script = import_module('.' + routine, package='routines')
     except ModuleNotFoundError:
         print('No routine found for "{}"'.format(routine))
-        print('Terminating')
         terminate()
 
     # executes routine
@@ -57,4 +60,4 @@ for routine in routines:
 while not all((is_done() for is_done in routines_done)):
     block()
 
-locator.close_resources()
+terminate()
