@@ -2,6 +2,7 @@ import sys
 from importlib import import_module
 from time import sleep
 import locator
+import traceback
 import routines.run_server as run_server
 
 config_path = sys.argv[1]
@@ -41,7 +42,8 @@ for routine in routines:
     try:
         routine_script = import_module('.' + routine, package='routines')
     except ModuleNotFoundError:
-        print('No routine found for "{}"'.format(routine))
+        print('No valid routine found for "{}"'.format(routine) + ' due to the following exception:')
+        traceback.print_exc()
         terminate()
 
     # executes routine
