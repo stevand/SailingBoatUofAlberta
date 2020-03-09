@@ -1,12 +1,13 @@
 import locator
 from threading import Thread
 from time import sleep
-from pi.external_io import socket, driver_subscription
+from pi.external_io import socket, driver_subscription, helmsman_subscriptions
 
 
 def get_boat_data():
     to_send = {
-        'driver': locator.get_driver().status()
+        'driver': locator.get_driver().status(),
+        'helmsman': locator.get_helmsman().status()
     }
     return to_send
 
@@ -21,10 +22,14 @@ def get_config():
         return config['socket']
     return {}
 
+def add_all_subscriptions():
+    socket.subscribe(*driver_subscription)
+    for subscription in helmsman_subscriptions:
+        socket.subscribe(*subscription)
+
 def exec():
     config = get_config()
-    socket.subscribe(*driver_subscription)
-
+    add_all_subscriptions()
     try:
         socket.begin(config['url'])
     except KeyError:
