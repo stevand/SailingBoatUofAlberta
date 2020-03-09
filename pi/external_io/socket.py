@@ -9,18 +9,21 @@ def begin(url='http://localhost:5001'):
     """This will connect to the socket at the given url"""
     sio.connect(url, namespaces=['/boat'])
 
+
 def close():
     """Disconnect the socket"""
     sio.disconnect()
+    print('socket connection closed')
 
-def subscribe(callback, depends_on: List[str] = []):
+
+def subscribe(callback, dependency: List[str] = []):
     """
     Adds a callback with optional dependencies to the list of subscribers.
-    The callback should be a function that takes a client_data dict as a parameter.
+    The callback should be a function that takes a subset of client_data dict as a parameter.
     It will be called whenever client data is recieved that contains relevant information (always by default).
 
-    depends_on is sequence of keywords that must be in the client_data in order for the callback to work.
-    The callback is only run if client_data[depends_on[0]][depends_on[1]]... is present.
+    dependency is sequence of keywords that must be in the client_data in order for the callback to work.
+    The callback is only run if client_data[dependency[0]][dependency[1]]... is present.
 
     This is what a client_data dict looks like:
     {
@@ -39,7 +42,7 @@ def subscribe(callback, depends_on: List[str] = []):
         },
     }
     """
-    subscribers.append((callback, depends_on))
+    subscribers.append((callback, dependency))
 
 
 def send_data(boat_data):
@@ -47,14 +50,17 @@ def send_data(boat_data):
     sio.emit('boat_data', boat_data, namespace='/boat')
 
 
-def should_call(depends_on, client_data):
-    """Checks if the nested keys in depends_on are present in client_data"""
+def get_relevant_data(dependency, client_data):
+    """
+    Finds the subset of client_data that is relevant given the dependency list.
+    Returns None if the sequence of keys in dependency is not present.
+    """
     data = client_data
-    for dependency in depends_on:
-        if depends_on not in client_data:
-            return False
+    for dependency in dependency:
+        if dependency not in client_data:
+            return None
         data = data[dependency]
-    return True
+    return data
 
 
 @sio.event
@@ -64,6 +70,7 @@ def connect():
 
 @sio.event(namespace='/boat')
 def client_data(data):
-    for callback, depends_on in subscribers:
-        if should_call(depends_on, data):
-            callback(data)
+    for callback, dependency in subscribers:
+        relevant_data = get_relevant_data(dependency, data)
+        if relevant_data is not None:
+            callback(relevant_data)
