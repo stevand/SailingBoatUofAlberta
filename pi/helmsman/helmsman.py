@@ -54,12 +54,8 @@ class Helmsman:
             'tolerance': self.tolerance,
             'desired_heading': self._rudder_controller.desired_heading,
             'maximize_speed': self.maximize_speed,
-            'rudder_controller': {
-                'enabled': self.rudder_controller_enabled
-            },
-            'sail_controller': {
-                'enabled': self.sail_controller_enabled
-            }
+            'rudder_controller_enabled': self.rudder_controller_enabled,
+            'sail_controller_enabled': self.sail_controller_enabled
         }
 
     @property

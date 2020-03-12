@@ -7,6 +7,7 @@ subscribers = []
 
 def begin(url='http://localhost:5001'):
     """This will connect to the socket at the given url"""
+    print("Attempting to connect to", url)
     sio.connect(url, namespaces=['/boat'])
 
 
@@ -55,6 +56,8 @@ def get_relevant_data(dependency, client_data):
     Finds the subset of client_data that is relevant given the dependency list.
     Returns None if the sequence of keys in dependency is not present.
     """
+    if not client_data:
+        return None
     data = client_data
     for dependency in dependency:
         if dependency not in client_data:

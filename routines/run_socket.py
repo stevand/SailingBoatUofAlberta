@@ -11,7 +11,7 @@ def get_boat_data():
     }
     return to_send
 
-def send_data_runnable(sleep_time = 0.1):
+def send_data_runnable(sleep_time = 5):
     while True:
         socket.send_data(get_boat_data())
         sleep(sleep_time)
