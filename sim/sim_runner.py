@@ -6,6 +6,7 @@ import sim.plot_canvas as plot
 import json
 import tkinter as tk
 import threading
+import sim
 from math import pi
 from time import sleep
 from .frame import Frame
@@ -13,27 +14,22 @@ from .frame import Frame
 DISPLAY_INTERVAL = 100  # time interval between subsequent frames are displayed
 
 
-def get_params():
-    with open('sim/sim_params.json', mode='r') as param_file:
-        sim_params = json.load(param_file)
-    return sim_params
+def get_params_from_name(params_name):
+    return getattr(sim.params, params_name)
 
 
-def get_start_state():
-    with open('sim/start_state.json', mode='r') as start_state_file:
-        start_state = Frame.fromjson(''.join(start_state_file.readlines()), EulerSimulator)
-    return start_state
+def get_start_frame_from_name(start_frame_name):
+    return getattr(sim.start_frame, start_frame_name)
 
 
-def load_sim(sim_params=None, start_state=None, frame_time=1000):
+def load_sim(params='default', start_frame='default', frame_time=1000):
     """Initializes and returns a simulator interface and simulator from saved params and start state."""
-    if not sim_params:
-        sim_params = get_params()
-    if not start_state:
-        start_state = get_start_state()
-
-    esim = EulerSimulator(**sim_params)  # constructs an euler simulator with the loaded params
-    sim_interface = SimulatorInterface(esim, frame_time, start_state)  # constructs an interface that will return frames frame_time ms apart
+    start_frame = get_start_frame_from_name(start_frame)
+    params = get_params_from_name(params)
+    # constructs an euler simulator with the loaded params
+    esim = EulerSimulator(**params)
+    # constructs an interface that will return frames frame_time ms apart
+    sim_interface = SimulatorInterface(esim, frame_time, start_frame)
 
     return sim_interface, esim
 
@@ -43,7 +39,7 @@ def make_control_getter(driver):
 
     def get_control():
         sail_dir = driver.get_sail()
-        if driver.get_wind_dir_rel() > 0: # makes sure sail is pointing in opposite direction to wind
+        if driver.get_wind_dir_rel() > 0:  # makes sure sail is pointing in opposite direction to wind
             sail_dir = -1 * sail_dir
         return EulerSimulator.control(
             s_angle=sail_dir / 180 * pi,
@@ -106,7 +102,6 @@ def run_sim(sim_interface, get_control=None, get_env=None, frame_delay=0, num_fr
     thread.start()
 
 
-
 def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, num_frames=200, verbose=False, log_file=None):
     """
     Simultaneously runs and displays the frames of sim_interface, allowing for a real time view of the simulation. Data saved to log.json.
@@ -116,15 +111,16 @@ def display_run(sim_interface, speed_factor=1, get_control=None, get_env=None, n
         speed_factor (float): How many times faster the simulator will run compared to real time. Default: 1.
         get_control (() -> EulerSimulator.control): A callback that returns the control that will be used in the simulation. Default: default_control.
         get_env (() -> EulerSimulator.env): A callback that returns the environment that will be used in the simulation. Default: default_env.
-    
+
     Returns:
         root: The root of the tkinter window that has been created
     """
     sim_interface.set_interval(DISPLAY_INTERVAL * speed_factor)
     run_sim(sim_interface, get_control=get_control, get_env=get_env, frame_delay=DISPLAY_INTERVAL,
             num_frames=num_frames, verbose=verbose, log_file=log_file)
-    
+
     return display(sim_interface)
+
 
 def display(sim_interface):
     """Displays all existing frames in the sim_interface. Does not generate any new frames. Used for replaying saved
@@ -154,8 +150,9 @@ def show(frame_gen):
     fig = plot.setup(next(frame_gen))
     plotcanvas = FigureCanvasTkAgg(fig, root)
     plotcanvas.get_tk_widget().grid(column=1, row=1)
-    ani = animation.FuncAnimation(fig, plot.updplot, frames=frame_gen, interval=DISPLAY_INTERVAL, blit=False)
-    #root.mainloop()
+    ani = animation.FuncAnimation(
+        fig, plot.updplot, frames=frame_gen, interval=DISPLAY_INTERVAL, blit=False)
+    # root.mainloop()
     return root
 
 

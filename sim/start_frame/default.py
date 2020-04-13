@@ -1,4 +1,5 @@
-{
+from sim.frame import Frame
+default = Frame.from_dict({
     "state": {
         "s_force": 0,
         "r_force": 0,
@@ -16,4 +17,4 @@
     "env": {
         "V": 0.5
     }
-}
+})

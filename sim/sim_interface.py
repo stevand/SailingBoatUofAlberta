@@ -49,11 +49,11 @@ class SimulatorInterface():
     
     def export_frames(self):
         """Returns a serialized (JSON) string representing the internal list of frames"""
-        return json.dumps([frame.tojson() for frame in self.frames()])
+        return json.dumps([frame.to_json() for frame in self.frames()])
 
     def import_frame(self, frame_data):
         """Imports and appends the frame represented by a serialized (JSON) string"""
-        self._frames.append(Frame.fromjson(frame_data, EulerSimulator))
+        self._frames.append(Frame.from_json(frame_data, EulerSimulator))
 
     def import_frames(self, data):
         """Imports a list of frames from a string containing a serialized (JSON) representation of frame history."""

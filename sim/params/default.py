@@ -1,4 +1,4 @@
-{
+default = {
     "step_size": 50,
     "beta": 0.005,
     "fric_a": 0.3,
