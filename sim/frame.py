@@ -1,4 +1,5 @@
 import json
+from collections import namedtuple
 from .euler_sim2 import EulerSimulator
 from .simulator import Simulator
 from typing import Type
@@ -12,6 +13,27 @@ class Frame():
         self._control = control
         self._env = env
 
+    @property
+    def state(self) -> namedtuple:
+        return self._state
+
+    @property
+    def control(self) -> namedtuple:
+        return self._control
+
+    @property
+    def env(self) -> namedtuple:
+        return self._env
+
+    def to_json(self) -> str:
+        return json.dumps(
+            {
+                "state": self._state._asdict(),
+                "control": self._control._asdict(),
+                "env": self._env._asdict()
+            }
+        )
+
     @classmethod
     def from_dict(cls, frame_dict, sim_class: Type[Simulator] = EulerSimulator) -> 'Frame':
         """
@@ -24,34 +46,13 @@ class Frame():
             sim_class.env(**frame_dict['env'])
         )
 
-    @property
-    def state(self):
-        return self._state
-
-    @property
-    def control(self):
-        return self._control
-
-    @property
-    def env(self):
-        return self._env
-
-    def tojson(self):
-        return json.dumps(
-            {
-                "state": self._state._asdict(),
-                "control": self._control._asdict(),
-                "env": self._env._asdict()
-            }
-        )
-
-    @staticmethod
-    def fromjson(data, Simulator):
+    @classmethod
+    def from_json(cls, data, Simulator) -> 'Frame':
         data = json.loads(data)
         state = Simulator.state(**(data['state']))
         control = Simulator.control(**(data['control']))
         env = Simulator.env(**data['env'])
-        return Frame(state, control, env)
+        return cls(state, control, env)
 
-    def __str__(self):
+    def __str__(self) -> 'str':
         return "state: {}\n control: {}\n env: {}".format(self._state, self._control, self._env)
