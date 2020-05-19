@@ -2,8 +2,10 @@
 Helper functions for navigation
 """
 from math import atan2, pi
+from functools import lru_cache
 
-
+# Results cached to optimize waypoint voter performance
+@lru_cache(maxsize=5)
 def dir_to_waypoint(x1, y1, x2, y2):
     """
     Finds the direction [0, 365] from the point (x1, y1) to (x2, y2)
@@ -13,7 +15,8 @@ def dir_to_waypoint(x1, y1, x2, y2):
         theta = 360 + theta
     return theta
 
-
+# Results cached to optimize waypoint voter performance
+@lru_cache(maxsize=5)
 def smallest_angle_between(angle1, angle2):
     """
     Returns the size of the smallest angle between angle1 and angle2
